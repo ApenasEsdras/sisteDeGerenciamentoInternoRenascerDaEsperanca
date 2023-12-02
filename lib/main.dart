@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sistemarenascerdaesperanca/firebase_options.dart';
-import 'package:sistemarenascerdaesperanca/pages/home_page.dart';
+import 'package:sistemarenascerdaesperanca/widgets/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../styles/colors_app.dart';
 import '../helpers/custom_confirmation_dialog.dart';
-import '../pages/home_page.dart';
+import '../widgets/home_page.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({
