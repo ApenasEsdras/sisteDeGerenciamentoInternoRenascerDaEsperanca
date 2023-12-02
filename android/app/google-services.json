@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "779344555546",
+    "project_id": "sistemarenascerdaesperanca",
+    "storage_bucket": "sistemarenascerdaesperanca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779344555546:android:67abaaabdec6d17a8d2ba3",
+        "android_client_info": {
+          "package_name": "com.example.sistemarenascerdaesperanca"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779344555546-l9u6s2nn8mpgnh3ghs9ri7ogdg8707aq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM5jVryxXv0_t0EkXNnodAYACqhabg9ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779344555546-l9u6s2nn8mpgnh3ghs9ri7ogdg8707aq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
