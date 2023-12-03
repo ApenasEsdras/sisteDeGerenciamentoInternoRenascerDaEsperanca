@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 
 import '../util/pessoas.dart';
 
@@ -9,11 +10,10 @@ class ListaPessoas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Lista de Pessoas'),
-      ),
+      backgroundColor: ColorsApp.instance.Azulfundo,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('responsaveis').snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('responsaveis').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(

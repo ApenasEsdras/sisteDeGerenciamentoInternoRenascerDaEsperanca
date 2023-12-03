@@ -22,7 +22,9 @@ class ColorsApp {
 
   Color get Branco => const Color.fromRGBO(253, 253, 253, 1);
 
-  Color get Azul => const Color.fromRGBO(46, 134, 171, 1);
+  Color get AzulClaro => const Color.fromRGBO(69, 185, 192, 0.8);
+  Color get AzulSombra => const Color.fromRGBO(69, 185, 192, 1);
+  Color get Azulfundo => const Color.fromRGBO(231, 239, 248, 1);
 }
 
 extension ColorsAppExceptions on BuildContext {

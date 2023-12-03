@@ -1,11 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:sistemarenascerdaesperanca/firebase_options.dart';
-import 'package:sistemarenascerdaesperanca/widgets/home_page.dart';
+import 'firebase_options.dart';
+import 'screens/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
+   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ListaPessoas(),
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }
