@@ -8,34 +8,40 @@ class BuildLeftBar {
 
       child: Column(
         children: [
-          const SizedBox(height: 280),
+          const SizedBox(height: 100),
           SizedBox(
+            height: 100, // Altura da área da imagem
             child: Image.asset(
-              'assets/images/logoHome.png',
-              color: ColorsApp.instance.Laranja,
-              height: 60,
+              'assets/images/logo.jpg', // Caminho para a imagem
+              fit: BoxFit.cover, // Modo de ajuste da imagem
             ),
+          ),
+          const SizedBox(
+            height: 16,
           ),
           Container(
             color: ColorsApp.instance.AzulSombra,
-            height: 80,
-            child: SizedBox(
-              height: 25,
-              child: Center(
-                child: Text(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.home, // Ícone de home do Material Icons
+                  color: ColorsApp.instance.Branco,
+                  size: 30,
+                ),
+                Text(
                   'Home',
                   style: TextStyle(
-                    fontFamily: 'NovaRound-Regular',
+                    fontFamily: 'roboto',
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
-                    color: ColorsApp.instance.CinzaEscuro,
+                    color: ColorsApp.instance.Branco,
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-          const SizedBox(height: 16.0),
-          // Adicione mais widgets conforme necessário
         ],
       ),
     );
