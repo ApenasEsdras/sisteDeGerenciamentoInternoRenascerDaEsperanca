@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
           ),
            const Expanded(
             flex: 4, // 80% do espaço para o conteúdo principal
-            child: ListaPessoas(),
+            child: ListarPessoas(),
           ),
         ],
       ),
