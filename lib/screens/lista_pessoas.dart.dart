@@ -38,16 +38,20 @@ class _ListarPessoasState extends State<ListarPessoas> {
   Future<List<Cliente>> fetchClientes() async {
     try {
       final QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('clientesTeste').get();
+          await FirebaseFirestore.instance.collection('responsaveis').get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final cliente = <Cliente>[];
 
         for (final doc in querySnapshot.docs) {
           final data = doc.data() as Map<String, dynamic>;
+          print(data['nome']);
 
           final nome = data['nome'];
-          final fone = data['fone'];
+          final idade = data['idade'];
+          final endereco = data['endereco'];
+            final fone = data['fone'];
+          /*
           final email = data['email'];
           final codigo = data['codigo'];
           final cgccpf = data['cgccpf'];
@@ -61,11 +65,14 @@ class _ListarPessoasState extends State<ListarPessoas> {
           final tipologradouro = data['tipologradouro'];
           final cep = data['cep'];
           final numero = data['numero'];
-          final complemento = data['complemento'];
+          final complemento = data['complemento'];*/
 
           final clienteData = Cliente(
             nome: nome,
-            fone: fone,
+            idade: idade,
+            endereco: endereco,
+             fone: fone,
+            /*
             email: email,
             codigo: codigo,
             cgccpf: cgccpf,
@@ -80,6 +87,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
             numero: numero,
             complemento: complemento,
             tipologradouro: tipologradouro,
+            */
           );
           cliente.add(clienteData);
           if (kDebugMode) {
@@ -201,7 +209,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CadastroClientePage(),
+                  builder: (context) => const CadastroClientePage(),
                 ),
               );
             },
@@ -221,6 +229,8 @@ class _ListarPessoasState extends State<ListarPessoas> {
 
 class Cliente {
   String? nome;
+  int? idade;
+  String? endereco;
   String? fone;
   String? email;
   String? codigo;
@@ -254,6 +264,8 @@ class Cliente {
     this.numero,
     this.complemento,
     this.tipologradouro,
+    this.idade,
+    this.endereco,
   });
 }
 
@@ -333,7 +345,7 @@ class ClienteCard extends StatelessWidget {
                 const SizedBox(
                   height: 6,
                 ),
-                Text('Código: ${cliente.codigo}'),
+                Text('endereço: ${cliente.endereco}'),
               ],
             ),
           ),
