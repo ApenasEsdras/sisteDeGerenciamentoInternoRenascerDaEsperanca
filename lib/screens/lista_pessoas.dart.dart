@@ -1,15 +1,17 @@
 // ignore_for_file: library_private_types_in_public_api, require_trailing_commas
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sistemarenascerdaesperanca/router/orders_page.dart';
 import 'package:sistemarenascerdaesperanca/screens/cadastrar_pessoas.dart';
 import 'package:sistemarenascerdaesperanca/screens/detales_das_pessoas_cadastradas.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 
 class ListarPessoas extends StatefulWidget {
-  const ListarPessoas({super.key});
+  const ListarPessoas({Key? key}) : super(key: key);
 
   @override
   _ListarPessoasState createState() => _ListarPessoasState();
@@ -19,20 +21,21 @@ class _ListarPessoasState extends State<ListarPessoas> {
   List<Cliente> clientes = [];
   List<Cliente> clientesFiltrados = [];
   late TextEditingController _searchController;
+  late StreamController<List<Cliente>> _streamController;
+  late List<Cliente> clientesSnapshot = [];
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _streamController = StreamController<List<Cliente>>.broadcast();
     _carregarClientes();
   }
 
   Future<void> _carregarClientes() async {
     final clientesList = await fetchClientes();
-    setState(() {
-      clientes = clientesList;
-      clientesFiltrados = clientesList;
-    });
+    clientesSnapshot = clientesList;
+    _streamController.add(clientesList);
   }
 
   Future<List<Cliente>> fetchClientes() async {
@@ -41,61 +44,26 @@ class _ListarPessoasState extends State<ListarPessoas> {
           await FirebaseFirestore.instance.collection('responsaveis').get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        final cliente = <Cliente>[];
+        final clienteList = <Cliente>[];
 
         for (final doc in querySnapshot.docs) {
           final data = doc.data() as Map<String, dynamic>;
-          print(data['nome']);
 
           final nome = data['nome'];
           final idade = data['idade'];
           final endereco = data['endereco'];
-            final fone = data['fone'];
-          /*
-          final email = data['email'];
-          final codigo = data['codigo'];
-          final cgccpf = data['cgccpf'];
-          final chave = data['chave'];
-          final classe = data['classe'];
-          final pais = data['pais'];
-          final uf = data['uf'];
-          final localidade = data['localidade'];
-          final sublocalidade = data['sublocalidade'];
-          final logradouro = data['logradouro'];
-          final tipologradouro = data['tipologradouro'];
-          final cep = data['cep'];
-          final numero = data['numero'];
-          final complemento = data['complemento'];*/
+          final fone = data['fone'];
 
           final clienteData = Cliente(
             nome: nome,
             idade: idade,
             endereco: endereco,
-             fone: fone,
-            /*
-            email: email,
-            codigo: codigo,
-            cgccpf: cgccpf,
-            chave: chave,
-            classe: classe,
-            pais: pais,
-            uf: uf,
-            localidade: localidade,
-            sublocalidade: sublocalidade,
-            logradouro: logradouro,
-            cep: cep,
-            numero: numero,
-            complemento: complemento,
-            tipologradouro: tipologradouro,
-            */
+            fone: fone,
           );
-          cliente.add(clienteData);
-          if (kDebugMode) {
-            print('Lista de clientes: ${clienteData.nome}');
-          }
+          clienteList.add(clienteData);
         }
 
-        return cliente;
+        return clienteList;
       } else {
         return [];
       }
@@ -108,29 +76,21 @@ class _ListarPessoasState extends State<ListarPessoas> {
   }
 
   void filterClientes(String query) {
-    if (kDebugMode) {
-      print('Filtrando clientes com a consulta: $query');
+    List<Cliente> filteredClientes;
+
+    if (query.isEmpty) {
+      filteredClientes = List.from(clientesSnapshot);
+    } else {
+      filteredClientes = clientesSnapshot
+          .where((cliente) =>
+              (cliente.nome?.toLowerCase().contains(query.toLowerCase()) ??
+                  false) ||
+              (cliente.fone?.toLowerCase().contains(query.toLowerCase()) ??
+                  false))
+          .toList();
     }
 
-    setState(() {
-      if (query.isEmpty) {
-        clientesFiltrados = clientes;
-      } else {
-        clientesFiltrados = clientes
-            .where((cliente) =>
-                (cliente.nome
-                        ?.toLowerCase()
-                        .contains(query.toLowerCase()) ??
-                    false) ||
-                (cliente.fone?.toLowerCase().contains(query.toLowerCase()) ??
-                    false) ||
-                (cliente.cgccpf?.toLowerCase().contains(query.toLowerCase()) ??
-                    false) ||
-                (cliente.codigo?.toLowerCase().contains(query.toLowerCase()) ??
-                    false))
-            .toList();
-      }
-    });
+    _streamController.add(filteredClientes);
   }
 
   void navigateToDetalhesCliente(Cliente cliente) {
@@ -145,7 +105,20 @@ class _ListarPessoasState extends State<ListarPessoas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: CustomAppBar(
+        showFilterIcon: false,
+        leftContent: Text(
+          'Cadastrar Responsavel',
+          style: TextStyle(
+            color: ColorsApp.instance.CinzaMedio2,
+            fontSize: 24,
+            fontFamily: 'roboto',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: Container(
+        
         color: ColorsApp.instance.Branco,
         child: Column(
           children: [
@@ -171,27 +144,45 @@ class _ListarPessoasState extends State<ListarPessoas> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: clientesFiltrados.length,
-                itemBuilder: (context, index) {
-                  final cliente = clientesFiltrados[index];
-                  return GestureDetector(
-                    onTap: () {
-                      navigateToDetalhesCliente(cliente);
+              child: StreamBuilder<List<Cliente>>(
+                stream: _streamController.stream,
+                initialData: clientesSnapshot,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Cliente>> snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Erro: ${snapshot.error}'));
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final clientes = snapshot.data!;
+
+                  if (clientes.isEmpty) {
+                    return const Center(
+                        child: Text('Nenhum cliente encontrado.'));
+                  }
+
+                  return ListView.builder(
+                    itemCount: clientes.length,
+                    itemBuilder: (context, index) {
+                      final cliente = clientes[index];
+                      return ListTile(
+                        title: Text(cliente.nome ?? ''),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(cliente.fone ?? ''),
+                            Text(cliente.endereco ?? '')
+                          ],
+                        ),
+                        onTap: () {
+                          navigateToDetalhesCliente(cliente);
+                        },
+                        // Adicione a ClienteCard aqui se necessário
+                      );
                     },
-                    child: ClienteCard(
-                      cliente,
-                      onClienteSelecionado: (clienteSelecionado) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrdersPage(
-                              clienteNome: cliente.nome.toString(),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
                   );
                 },
               ),

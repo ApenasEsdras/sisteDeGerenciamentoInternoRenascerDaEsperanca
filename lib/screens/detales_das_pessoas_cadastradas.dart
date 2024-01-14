@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistemarenascerdaesperanca/screens/lista_pessoas.dart.dart';
 import 'package:sistemarenascerdaesperanca/styles/app_styles.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 
 class DetalhesClientePage extends StatelessWidget {
   final Cliente cliente;
@@ -11,6 +12,18 @@ class DetalhesClientePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: CustomAppBar(
+        showFilterIcon: false,
+        leftContent: Text(
+          'Detalhes do responsavel',
+          style: TextStyle(
+            color: ColorsApp.instance.CinzaMedio2,
+            fontSize: 24,
+            fontFamily: 'roboto',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: Container(
         color: ColorsApp.instance.Branco,
         child: Padding(

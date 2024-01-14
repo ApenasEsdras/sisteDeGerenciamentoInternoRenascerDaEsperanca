@@ -1,13 +1,15 @@
-
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
+import 'package:sistemarenascerdaesperanca/screens/home_page.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 
 class CadastroClientePage extends StatefulWidget {
   const CadastroClientePage({super.key});
@@ -21,6 +23,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
   // TextEditingController codigoController = TextEditingController();
   TextEditingController nomeController = TextEditingController();
   // TextEditingController classeController = TextEditingController();
+
   TextEditingController cgccpfController = TextEditingController();
   TextEditingController paisController = TextEditingController();
   TextEditingController ufController = TextEditingController();
@@ -40,6 +43,8 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
       if (clienteNaoCadastrado) {
         final cliente = {
           'codigo': cgccpfController.text,
+          'endereco':
+              '${tipologradouroController.text} ${numeroController.text}',
           'nome': nomeController.text,
           'classe': 'Clientes',
           'cgccpf': cgccpfController.text,
@@ -58,11 +63,13 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           'email': emailController.text,
         };
 
-        print(cliente);
+        if (kDebugMode) {
+          print(cliente);
+        }
 
         try {
           await FirebaseFirestore.instance
-              .collection('clientes')
+              .collection('responsaveis')
               .doc(nomeController.text)
               .set(cliente);
           debugPrint(
@@ -72,6 +79,12 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           setState(() {
             Navigator.pop(context);
             CustomAlertDialog.cadastroClienteSucesso(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
           });
         } catch (e) {
           setState(() {
@@ -102,7 +115,6 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
       return true; // Cliente não está cadastrado
     }
   }
-
 
   Future<void> _preencherEnderecoPorCEP(String cepController) async {
     final url = Uri.parse(
@@ -139,7 +151,18 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
+        appBar: CustomAppBar(
+        showFilterIcon: false,
+        leftContent: Text(
+          'Cadastrar Responsavel',
+          style: TextStyle(
+            color: ColorsApp.instance.CinzaMedio2,
+            fontSize: 24,
+            fontFamily: 'roboto',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: Container(
         color: ColorsApp.instance.Branco,
         child: Padding(
