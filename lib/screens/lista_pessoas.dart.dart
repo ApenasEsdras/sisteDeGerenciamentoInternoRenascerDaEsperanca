@@ -1,15 +1,15 @@
-// ignore_for_file: library_private_types_in_public_api, require_trailing_commas
+// listar_pessoas.dart
+// ignore_for_file: library_private_types_in_public_api
 
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sistemarenascerdaesperanca/models/cliente_models.dart';
+import 'package:sistemarenascerdaesperanca/reposotory/cliente_repository.dart';
 import 'package:sistemarenascerdaesperanca/screens/cadastrar_pessoas.dart';
-import 'package:sistemarenascerdaesperanca/screens/detales_das_pessoas_cadastradas.dart';
+import 'package:sistemarenascerdaesperanca/screens/detalhes_das_pessoas_cadastradas.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/util/pessoas_construcror.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
+import 'package:sistemarenascerdaesperanca/widgets/cliente_list_item.dart';
 
 class ListarPessoas extends StatefulWidget {
   const ListarPessoas({Key? key}) : super(key: key);
@@ -19,12 +19,12 @@ class ListarPessoas extends StatefulWidget {
 }
 
 class _ListarPessoasState extends State<ListarPessoas> {
-  final int maxCaracteres = 30;
   List<Cliente> clientes = [];
   List<Cliente> clientesFiltrados = [];
   late TextEditingController _searchController;
   late StreamController<List<Cliente>> _streamController;
   late List<Cliente> clientesSnapshot = [];
+  final ClienteRepository clienteRepository = ClienteRepository();
 
   @override
   void initState() {
@@ -35,46 +35,9 @@ class _ListarPessoasState extends State<ListarPessoas> {
   }
 
   Future<void> _carregarClientes() async {
-    final clientesList = await fetchClientes();
+    final clientesList = await clienteRepository.fetchClientes();
     clientesSnapshot = clientesList;
     _streamController.add(clientesList);
-  }
-
-  Future<List<Cliente>> fetchClientes() async {
-    try {
-      final QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('responsaveis').get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final clienteList = <Cliente>[];
-
-        for (final doc in querySnapshot.docs) {
-          final data = doc.data() as Map<String, dynamic>;
-
-          final nome = data['nome'];
-          final idade = data['idade'];
-          final endereco = data['endereco'];
-          final fone = data['fone'];
-
-          final clienteData = Cliente(
-            nome: nome,
-            idade: idade,
-            endereco: endereco,
-            fone: fone,
-          );
-          clienteList.add(clienteData);
-        }
-
-        return clienteList;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Erro ao carregar clientes: $e');
-      }
-      return [];
-    }
   }
 
   void filterClientes(String query) {
@@ -105,100 +68,8 @@ class _ListarPessoasState extends State<ListarPessoas> {
   }
 
   void onDelete(Cliente cliente) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('responsaveis')
-          .doc(cliente
-              .nome) // Substitua "id" pelo campo que representa a identificação do documento
-          .delete();
-      // Atualize a lista após a exclusão
-      _carregarClientes();
-    } catch (e) {
-      print('Erro ao excluir cliente: $e');
-    }
-  }
-
-  Widget _buildClienteListItem(
-    Cliente cliente,
-    Function(Cliente) onTapCallback,
-    Function(Cliente) onDelet,
-  ) {
-    String nomeExibido = cliente.nome.toString();
-
-    if (cliente.nome!.length > maxCaracteres) {
-      nomeExibido = '${cliente.nome?.substring(0, maxCaracteres)}...';
-    }
-
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: ColorsApp.instance.Branco,
-        border: Border(
-          bottom: BorderSide(
-            color: ColorsApp.instance.CinzaMedio,
-            width: 0.8,
-          ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 6.0,
-          bottom: 6.0,
-          left: 10.0,
-          right: 0,
-        ),
-        child: ListTile(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                nomeExibido,
-                overflow: TextOverflow.ellipsis,
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'editar') {
-                    // Ação de editar
-                  } else if (value == 'Excluir') {
-                    // onClienteSelecionado(cliente);
-
-                    onDelet(cliente);
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return {'Editar', 'Excluir'}.map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
-              ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 12.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Telefone: ${cliente.fone}'),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text('endereço: ${cliente.endereco}'),
-              ],
-            ),
-          ),
-          //chama funcao e atribui o valor do cliente selecionado
-          onTap: () {
-            onTapCallback(cliente);
-          },
-          iconColor: ColorsApp.instance.CinzaEscuro,
-        ),
-      ),
-    );
+    await clienteRepository.deleteCliente(cliente);
+    _carregarClientes();
   }
 
   @override
@@ -266,8 +137,11 @@ class _ListarPessoasState extends State<ListarPessoas> {
                     itemCount: clientes.length,
                     itemBuilder: (context, index) {
                       final cliente = clientes[index];
-                      return _buildClienteListItem(
-                          cliente, navigateToDetalhesCliente, onDelete);
+                      return ClienteListItem(
+                        cliente: cliente,
+                        onTapCallback: navigateToDetalhesCliente,
+                        onDelete: onDelete,
+                      );
                     },
                   );
                 },

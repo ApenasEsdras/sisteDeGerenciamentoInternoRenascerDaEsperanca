@@ -73,7 +73,6 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
               .doc(nomeController.text)
               .set(cliente);
           debugPrint(
-            // converrte e exibe os dados do pedidio em Json
             jsonEncode(cliente),
           );
           setState(() {
@@ -151,7 +150,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
+      appBar: CustomAppBar(
         showFilterIcon: false,
         leftContent: Text(
           'Cadastrar Responsavel',
