@@ -133,15 +133,44 @@ class _ListarPessoasState extends State<ListarPessoas> {
                         child: Text('Nenhum cliente encontrado.'));
                   }
 
-                  return ListView.builder(
-                    itemCount: clientes.length,
-                    itemBuilder: (context, index) {
-                      final cliente = clientes[index];
-                      return ClienteListItem(
-                        cliente: cliente,
-                        onTapCallback: navigateToDetalhesCliente,
-                        onDelete: onDelete,
-                      );
+                  return LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      // Verificar a largura da tela
+                      if (constraints.maxWidth > 600) {
+                        // Se a largura da tela for maior que 600, use o GridView
+                        return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 12,
+                            mainAxisExtent: 120
+                          ),
+                          itemCount: clientes.length,
+                          itemBuilder: (context, index) {
+                            final cliente = clientes[index];
+                            return ClienteListItem(
+                              cliente: cliente,
+                              onTapCallback: navigateToDetalhesCliente,
+                              onDelete: onDelete,
+                            );
+                          },
+                        );
+                      } else {
+                        // Caso contrário, continue usando o ListView.builder
+                        return ListView.builder(
+                          itemCount: clientes.length,
+                          itemBuilder: (context, index) {
+                            final cliente = clientes[index];
+                            return ClienteListItem(
+                              cliente: cliente,
+                              onTapCallback: navigateToDetalhesCliente,
+                              onDelete: onDelete,
+                            );
+                          },
+                        );
+                      }
                     },
                   );
                 },
