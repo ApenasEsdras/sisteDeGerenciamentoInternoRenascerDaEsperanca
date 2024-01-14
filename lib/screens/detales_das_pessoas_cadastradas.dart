@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistemarenascerdaesperanca/screens/lista_pessoas.dart.dart';
 import 'package:sistemarenascerdaesperanca/styles/app_styles.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/util/pessoas_construcror.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 
 class DetalhesClientePage extends StatelessWidget {

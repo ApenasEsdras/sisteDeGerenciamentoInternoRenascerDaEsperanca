@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sistemarenascerdaesperanca/screens/cadastrar_pessoas.dart';
 import 'package:sistemarenascerdaesperanca/screens/detales_das_pessoas_cadastradas.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/util/pessoas_construcror.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 
 class ListarPessoas extends StatefulWidget {
@@ -18,6 +19,7 @@ class ListarPessoas extends StatefulWidget {
 }
 
 class _ListarPessoasState extends State<ListarPessoas> {
+  final int maxCaracteres = 30;
   List<Cliente> clientes = [];
   List<Cliente> clientesFiltrados = [];
   late TextEditingController _searchController;
@@ -102,10 +104,107 @@ class _ListarPessoasState extends State<ListarPessoas> {
     );
   }
 
+  void onDelete(Cliente cliente) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('responsaveis')
+          .doc(cliente
+              .nome) // Substitua "id" pelo campo que representa a identificação do documento
+          .delete();
+      // Atualize a lista após a exclusão
+      _carregarClientes();
+    } catch (e) {
+      print('Erro ao excluir cliente: $e');
+    }
+  }
+
+  Widget _buildClienteListItem(
+    Cliente cliente,
+    Function(Cliente) onTapCallback,
+    Function(Cliente) onDelet,
+  ) {
+    String nomeExibido = cliente.nome.toString();
+
+    if (cliente.nome!.length > maxCaracteres) {
+      nomeExibido = '${cliente.nome?.substring(0, maxCaracteres)}...';
+    }
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: ColorsApp.instance.Branco,
+        border: Border(
+          bottom: BorderSide(
+            color: ColorsApp.instance.CinzaMedio,
+            width: 0.8,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 6.0,
+          bottom: 6.0,
+          left: 10.0,
+          right: 0,
+        ),
+        child: ListTile(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                nomeExibido,
+                overflow: TextOverflow.ellipsis,
+              ),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'editar') {
+                    // Ação de editar
+                  } else if (value == 'Excluir') {
+                    // onClienteSelecionado(cliente);
+
+                    onDelet(cliente);
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return {'Editar', 'Excluir'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList();
+                },
+              ),
+            ],
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Telefone: ${cliente.fone}'),
+                const SizedBox(
+                  height: 6,
+                ),
+                Text('endereço: ${cliente.endereco}'),
+              ],
+            ),
+          ),
+          //chama funcao e atribui o valor do cliente selecionado
+          onTap: () {
+            onTapCallback(cliente);
+          },
+          iconColor: ColorsApp.instance.CinzaEscuro,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
+      appBar: CustomAppBar(
         showFilterIcon: false,
         leftContent: Text(
           'Cadastrar Responsavel',
@@ -118,7 +217,6 @@ class _ListarPessoasState extends State<ListarPessoas> {
         ),
       ),
       body: Container(
-        
         color: ColorsApp.instance.Branco,
         child: Column(
           children: [
@@ -168,20 +266,8 @@ class _ListarPessoasState extends State<ListarPessoas> {
                     itemCount: clientes.length,
                     itemBuilder: (context, index) {
                       final cliente = clientes[index];
-                      return ListTile(
-                        title: Text(cliente.nome ?? ''),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(cliente.fone ?? ''),
-                            Text(cliente.endereco ?? '')
-                          ],
-                        ),
-                        onTap: () {
-                          navigateToDetalhesCliente(cliente);
-                        },
-                        // Adicione a ClienteCard aqui se necessário
-                      );
+                      return _buildClienteListItem(
+                          cliente, navigateToDetalhesCliente, onDelete);
                     },
                   );
                 },
@@ -212,135 +298,6 @@ class _ListarPessoasState extends State<ListarPessoas> {
               size: 26,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class Cliente {
-  String? nome;
-  int? idade;
-  String? endereco;
-  String? fone;
-  String? email;
-  String? codigo;
-  String? cgccpf;
-  int? chave;
-  String? classe;
-  String? pais;
-  String? uf;
-  String? localidade;
-  String? sublocalidade;
-  String? logradouro;
-  String? cep;
-  String? numero;
-  String? complemento;
-  String? tipologradouro;
-
-  Cliente({
-    this.nome,
-    this.fone,
-    this.email,
-    this.codigo,
-    this.cgccpf,
-    this.chave,
-    this.classe,
-    this.pais,
-    this.uf,
-    this.localidade,
-    this.sublocalidade,
-    this.logradouro,
-    this.cep,
-    this.numero,
-    this.complemento,
-    this.tipologradouro,
-    this.idade,
-    this.endereco,
-  });
-}
-
-class ClienteCard extends StatelessWidget {
-  final Cliente cliente;
-  final int maxCaracteres = 30;
-
-  const ClienteCard(
-    this.cliente, {
-    super.key,
-    required this.onClienteSelecionado,
-  });
-
-  final Function(Cliente) onClienteSelecionado;
-
-  @override
-  Widget build(BuildContext context) {
-    String nomeExibido = cliente.nome.toString();
-
-    if (cliente.nome!.length > maxCaracteres) {
-      nomeExibido = '${cliente.nome?.substring(0, maxCaracteres)}...';
-    }
-
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: ColorsApp.instance.Branco,
-        border: Border(
-          bottom: BorderSide(
-            color: ColorsApp.instance.CinzaMedio,
-            width: 0.8,
-          ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 6.0,
-          bottom: 6.0,
-          left: 10.0,
-          right: 0,
-        ),
-        child: ListTile(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                nomeExibido,
-                overflow: TextOverflow.ellipsis,
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'editar') {
-                    // Ação de editar
-                  } else if (value == 'criar_pedido') {
-                    onClienteSelecionado(cliente);
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return {'Editar', 'Criar Pedido'}.map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
-              ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 12.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Telefone: ${cliente.fone}'),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text('endereço: ${cliente.endereco}'),
-              ],
-            ),
-          ),
-          iconColor: ColorsApp.instance.CinzaEscuro,
         ),
       ),
     );
