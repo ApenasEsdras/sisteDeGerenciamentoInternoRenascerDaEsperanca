@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:sistemarenascerdaesperanca/models/cliente_models.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 
-class ClienteListItem extends StatelessWidget {
-  final Cliente cliente;
-  final Function(Cliente) onTapCallback;
-  final Function(Cliente) onDelete;
+class ResponsavelListItem extends StatelessWidget {
+  final Responsavel cliente;
+  final Function(Responsavel) onTapCallback;
+  final Function(Responsavel) onDelete;
   final int maxCaracteres = 30;
 
-  const ClienteListItem({
+  const ResponsavelListItem({
     Key? key,
     required this.cliente,
     required this.onTapCallback,

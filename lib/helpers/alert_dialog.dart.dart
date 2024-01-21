@@ -163,11 +163,11 @@ class CustomAlertDialog {
 
   static void showErrorDadosFaltando(
     BuildContext context,
-    bool isClienteEmpty,
+    bool isResponsavelEmpty,
     bool isPagamentosEmpty,
   ) {
-    if (isClienteEmpty || isPagamentosEmpty) {
-      final String message = isClienteEmpty
+    if (isResponsavelEmpty || isPagamentosEmpty) {
+      final String message = isResponsavelEmpty
           ? 'Selecione um cliente antes de prosseguir.'
           : 'Selecione pelo menos um método de pagamento.';
 
@@ -186,7 +186,7 @@ class CustomAlertDialog {
     }
   }
 
-  static void cadastroClienteSucesso(BuildContext context) {
+  static void cadastroResponsavelSucesso(BuildContext context) {
     const snackBar = SnackBar(
       content: Text(
         'O cliente foi cadastrado com sucesso.',
@@ -202,7 +202,7 @@ class CustomAlertDialog {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  static void cadastroClienteErro(BuildContext context, String erro) {
+  static void cadastroResponsavelErro(BuildContext context, String erro) {
     final snackBar = SnackBar(
       content: Text(
         'Erro ao cadastrar o cliente: $erro',
@@ -218,7 +218,7 @@ class CustomAlertDialog {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  static void cadastroClienteRepetido(BuildContext context) {
+  static void cadastroResponsavelRepetido(BuildContext context) {
     const snackBar = SnackBar(
       content: Text(
         'Um cliente com esse CGC/CPF já está cadastrado.',

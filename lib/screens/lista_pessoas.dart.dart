@@ -19,34 +19,34 @@ class ListarPessoas extends StatefulWidget {
 }
 
 class _ListarPessoasState extends State<ListarPessoas> {
-  List<Cliente> clientes = [];
-  List<Cliente> clientesFiltrados = [];
+  List<Responsavel> clientes = [];
+  List<Responsavel> clientesFiltrados = [];
   late TextEditingController _searchController;
-  late StreamController<List<Cliente>> _streamController;
-  late List<Cliente> clientesSnapshot = [];
-  final ClienteRepository clienteRepository = ClienteRepository();
+  late StreamController<List<Responsavel>> _streamController;
+  late List<Responsavel> clientesSnapshot = [];
+  final ResponsavelRepository clienteRepository = ResponsavelRepository();
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    _streamController = StreamController<List<Cliente>>.broadcast();
-    _carregarClientes();
+    _streamController = StreamController<List<Responsavel>>.broadcast();
+    _carregarResponsavels();
   }
 
-  Future<void> _carregarClientes() async {
-    final clientesList = await clienteRepository.fetchClientes();
+  Future<void> _carregarResponsavels() async {
+    final clientesList = await clienteRepository.fetchResponsavels();
     clientesSnapshot = clientesList;
     _streamController.add(clientesList);
   }
 
-  void filterClientes(String query) {
-    List<Cliente> filteredClientes;
+  void filterResponsavels(String query) {
+    List<Responsavel> filteredResponsavels;
 
     if (query.isEmpty) {
-      filteredClientes = List.from(clientesSnapshot);
+      filteredResponsavels = List.from(clientesSnapshot);
     } else {
-      filteredClientes = clientesSnapshot
+      filteredResponsavels = clientesSnapshot
           .where((cliente) =>
               (cliente.nome?.toLowerCase().contains(query.toLowerCase()) ??
                   false) ||
@@ -55,21 +55,21 @@ class _ListarPessoasState extends State<ListarPessoas> {
           .toList();
     }
 
-    _streamController.add(filteredClientes);
+    _streamController.add(filteredResponsavels);
   }
 
-  void navigateToDetalhesCliente(Cliente cliente) {
+  void navigateToDetalhesResponsavel(Responsavel cliente) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetalhesClientePage(cliente: cliente),
+        builder: (context) => DetalhesResponsavelPage(cliente: cliente),
       ),
     );
   }
 
-  void onDelete(Cliente cliente) async {
-    await clienteRepository.deleteCliente(cliente);
-    _carregarClientes();
+  void onDelete(Responsavel cliente) async {
+    await clienteRepository.deleteResponsavel(cliente);
+    _carregarResponsavels();
   }
 
   @override
@@ -101,7 +101,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (query) {
-                  filterClientes(query);
+                  filterResponsavels(query);
                 },
                 decoration: InputDecoration(
                   hintText: 'Pesquisar cliente',
@@ -113,11 +113,11 @@ class _ListarPessoasState extends State<ListarPessoas> {
               ),
             ),
             Expanded(
-              child: StreamBuilder<List<Cliente>>(
+              child: StreamBuilder<List<Responsavel>>(
                 stream: _streamController.stream,
                 initialData: clientesSnapshot,
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<Cliente>> snapshot) {
+                    AsyncSnapshot<List<Responsavel>> snapshot) {
                   if (snapshot.hasError) {
                     return Center(child: Text('Erro: ${snapshot.error}'));
                   }
@@ -150,9 +150,9 @@ class _ListarPessoasState extends State<ListarPessoas> {
                           itemCount: clientes.length,
                           itemBuilder: (context, index) {
                             final cliente = clientes[index];
-                            return ClienteListItem(
+                            return ResponsavelListItem(
                               cliente: cliente,
-                              onTapCallback: navigateToDetalhesCliente,
+                              onTapCallback: navigateToDetalhesResponsavel,
                               onDelete: onDelete,
                             );
                           },
@@ -163,9 +163,9 @@ class _ListarPessoasState extends State<ListarPessoas> {
                           itemCount: clientes.length,
                           itemBuilder: (context, index) {
                             final cliente = clientes[index];
-                            return ClienteListItem(
+                            return ResponsavelListItem(
                               cliente: cliente,
-                              onTapCallback: navigateToDetalhesCliente,
+                              onTapCallback: navigateToDetalhesResponsavel,
                               onDelete: onDelete,
                             );
                           },
@@ -189,7 +189,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CadastroClientePage(),
+                  builder: (context) => const CadastroResponsavelPage(),
                 ),
               );
             },

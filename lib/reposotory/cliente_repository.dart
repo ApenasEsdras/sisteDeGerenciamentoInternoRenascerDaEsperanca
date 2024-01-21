@@ -3,28 +3,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sistemarenascerdaesperanca/models/cliente_models.dart';
 
-class ClienteRepository {
-  Future<List<Cliente>> fetchClientes() async {
+class ResponsavelRepository {
+  Future<List<Responsavel>> fetchResponsavels() async {
     try {
       final QuerySnapshot querySnapshot =
           await FirebaseFirestore.instance.collection('responsaveis').get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        final clienteList = <Cliente>[];
+        final clienteList = <Responsavel>[];
 
         for (final doc in querySnapshot.docs) {
           final data = doc.data() as Map<String, dynamic>;
 
           final nome = data['nome'];
-          final idade = data['idade'];
-          final endereco = data['endereco'];
           final fone = data['fone'];
+          final email = data['email'];
+          final idade = data['idade'];
+          final cpf = data['cpf'];
+          final endereco = data['endereco'];
 
-          final clienteData = Cliente(
+          final clienteData = Responsavel(
             nome: nome,
-            idade: idade,
-            endereco: endereco,
             fone: fone,
+            idade: idade,
+            email: email,
+            cpf: cpf,
+            endereco: endereco,
           );
           clienteList.add(clienteData);
         }
@@ -41,7 +45,7 @@ class ClienteRepository {
     }
   }
 
-  Future<void> deleteCliente(Cliente cliente) async {
+  Future<void> deleteResponsavel(Responsavel cliente) async {
     try {
       await FirebaseFirestore.instance
           .collection('responsaveis')

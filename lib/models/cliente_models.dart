@@ -1,11 +1,11 @@
-class Cliente {
+class Responsavel {
   String? nome;
   int? idade;
   String? endereco;
   String? fone;
   String? email;
   String? codigo;
-  String? cgccpf;
+  String? cpf;
   int? chave;
   String? classe;
   String? pais;
@@ -18,12 +18,12 @@ class Cliente {
   String? complemento;
   String? tipologradouro;
 
-  Cliente({
+  Responsavel({
     this.nome,
     this.fone,
     this.email,
     this.codigo,
-    this.cgccpf,
+    this.cpf,
     this.chave,
     this.classe,
     this.pais,

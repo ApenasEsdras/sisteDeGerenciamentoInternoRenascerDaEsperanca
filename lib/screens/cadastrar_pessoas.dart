@@ -10,24 +10,22 @@ import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 import 'package:sistemarenascerdaesperanca/screens/home_page.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
+import 'package:sistemarenascerdaesperanca/widgets/pessoa_cadastro_widget.dart';
 
-class CadastroClientePage extends StatefulWidget {
-  const CadastroClientePage({super.key});
+class CadastroResponsavelPage extends StatefulWidget {
+  const CadastroResponsavelPage({super.key});
 
   @override
-  _CadastroClientePageState createState() => _CadastroClientePageState();
+  _CadastroResponsavelPageState createState() =>
+      _CadastroResponsavelPageState();
 }
 
-class _CadastroClientePageState extends State<CadastroClientePage> {
+class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // TextEditingController codigoController = TextEditingController();
   TextEditingController nomeController = TextEditingController();
-  // TextEditingController classeController = TextEditingController();
-
-  TextEditingController cgccpfController = TextEditingController();
+  TextEditingController cpfController = TextEditingController();
   TextEditingController paisController = TextEditingController();
   TextEditingController ufController = TextEditingController();
-  TextEditingController tipologradouroController = TextEditingController();
   TextEditingController logradouroController = TextEditingController();
   TextEditingController cidadeController = TextEditingController();
   TextEditingController bairroController = TextEditingController();
@@ -37,30 +35,23 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
   TextEditingController foneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  Future<void> _cadastrarCliente() async {
+  Future<void> _cadastrarResponsavel() async {
     if (_formKey.currentState!.validate()) {
-      final bool clienteNaoCadastrado = await _verificarCadastroCliente();
+      final bool clienteNaoCadastrado = await _verificarCadastroResponsavel();
       if (clienteNaoCadastrado) {
         final cliente = {
-          'codigo': cgccpfController.text,
-          'endereco':
-              '${tipologradouroController.text} ${numeroController.text}',
           'nome': nomeController.text,
-          'classe': 'Clientes',
-          'cgccpf': cgccpfController.text,
+          'cpf': cpfController.text,
           'pais': paisController.text,
-          'uf': ufController.text,
-          'localidade': cidadeController.text,
-          'sublocalidade': bairroController.text,
-          'tipologradouro': tipologradouroController.text,
-          'logradouro': logradouroController.text,
-          'bairro': bairroController.text,
-          'cidade': cidadeController.text,
-          'cep': cepController.text,
-          'numero': numeroController.text,
           'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
+          'endereco': '${logradouroController.text}, '
+              ' ${numeroController.text}, '
+              ' ${bairroController.text}, '
+              ' ${cidadeController.text}, '
+              ' ${ufController.text}, '
+              'cep: ${cepController.text}',
         };
 
         if (kDebugMode) {
@@ -77,7 +68,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           );
           setState(() {
             Navigator.pop(context);
-            CustomAlertDialog.cadastroClienteSucesso(context);
+            CustomAlertDialog.cadastroResponsavelSucesso(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -87,31 +78,30 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           });
         } catch (e) {
           setState(() {
-            CustomAlertDialog.cadastroClienteErro(context, '$e');
+            CustomAlertDialog.cadastroResponsavelErro(context, '$e');
           });
         }
       }
     }
   }
 
-  Future<bool> _verificarCadastroCliente() async {
+  Future<bool> _verificarCadastroResponsavel() async {
     // final codigo = codigoController.text;
-    final cgccpf = cgccpfController.text;
-
-    // Realize a consulta no Firestore para verificar se o cliente já está cadastrado
+    final cpf = cpfController.text;
+    // Realize a consulta no Firestore para verificar
+    //se o cliente já está cadastrado
     final query = await FirebaseFirestore.instance
         .collection('clientes')
-        // .where('codigo', isEqualTo: codigo)
-        .where('cgccpf', isEqualTo: cgccpf)
+        .where('cpf', isEqualTo: cpf)
         .get();
 
     if (query.docs.isNotEmpty) {
       setState(() {
-        CustomAlertDialog.cadastroClienteRepetido(context);
+        CustomAlertDialog.cadastroResponsavelRepetido(context);
       });
-      return false; // Cliente já está cadastrado
+      return false; // Responsavel já está cadastrado
     } else {
-      return true; // Cliente não está cadastrado
+      return true; // Responsavel não está cadastrado
     }
   }
 
@@ -132,7 +122,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           ufController.text = data['uf'];
           cidadeController.text = data['localidade'];
           bairroController.text = data['bairro'];
-          tipologradouroController.text = data['logradouro'];
+
           logradouroController.text = data['logradouro'];
         });
       } else {
@@ -145,6 +135,37 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
         CustomAlertDialog.erroCep(context, ': $e');
       });
     }
+  }
+
+  InputDecoration getCustomInputDecoration(String labelText) {
+    return InputDecoration(
+      labelText: labelText,
+      labelStyle: TextStyle(
+        fontFamily: 'roboto',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: ColorsApp.instance.CinzaEscuro,
+      ),
+      floatingLabelStyle: MaterialStateTextStyle.resolveWith(
+        (Set<MaterialState> states) {
+          final Color color = states.contains(MaterialState.focused)
+              ? ColorsApp.instance.Laranja
+              : ColorsApp.instance.CinzaMedio2;
+          return TextStyle(color: color);
+        },
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: ColorsApp.instance.Laranja,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: 0.8,
+          color: ColorsApp.instance.CinzaMedio,
+        ),
+      ),
+    );
   }
 
   @override
@@ -162,216 +183,88 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
           ),
         ),
       ),
-      body: Container(
-        color: ColorsApp.instance.Branco,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: nomeController,
-                  decoration: InputDecoration(
-                    labelText: 'Nome*',
-                    labelStyle: TextStyle(
-                      fontFamily: 'roboto',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsApp.instance.CinzaEscuro,
-                    ),
-                    floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-                      (Set<MaterialState> states) {
-                        final Color color =
-                            states.contains(MaterialState.focused)
-                                ? ColorsApp.instance.Laranja
-                                : ColorsApp.instance.CinzaMedio2;
-                        return TextStyle(color: color);
-                      },
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsApp.instance.Laranja,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 0.8,
-                        color: ColorsApp.instance.CinzaMedio,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Campo obrigatório';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: cgccpfController,
-                  decoration: InputDecoration(
-                    labelText: 'CPF/CNPJ*',
-                    labelStyle: TextStyle(
-                      fontFamily: 'roboto',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsApp.instance.CinzaEscuro,
-                    ),
-                    floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-                      (Set<MaterialState> states) {
-                        final Color color =
-                            states.contains(MaterialState.focused)
-                                ? ColorsApp.instance.Laranja
-                                : ColorsApp.instance.CinzaMedio2;
-                        return TextStyle(color: color);
-                      },
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsApp.instance.Laranja,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 0.8,
-                        color: ColorsApp.instance.CinzaMedio,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Campo obrigatório';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: foneController,
-                  decoration: InputDecoration(
-                    labelText: 'Fone',
-                    labelStyle: TextStyle(
-                      fontFamily: 'roboto',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsApp.instance.CinzaEscuro,
-                    ),
-                    floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-                      (Set<MaterialState> states) {
-                        final Color color =
-                            states.contains(MaterialState.focused)
-                                ? ColorsApp.instance.Laranja
-                                : ColorsApp.instance.CinzaMedio2;
-                        return TextStyle(color: color);
-                      },
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsApp.instance.Laranja,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 0.8,
-                        color: ColorsApp.instance.CinzaMedio,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Campo obrigatório';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    labelStyle: TextStyle(
-                      fontFamily: 'roboto',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorsApp.instance.CinzaEscuro,
-                    ),
-                    floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-                      (Set<MaterialState> states) {
-                        final Color color =
-                            states.contains(MaterialState.focused)
-                                ? ColorsApp.instance.Laranja
-                                : ColorsApp.instance.CinzaMedio2;
-                        return TextStyle(color: color);
-                      },
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsApp.instance.Laranja,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 0.8,
-                        color: ColorsApp.instance.CinzaMedio,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Theme(
-                  data: Theme.of(context).copyWith(
-                    dividerColor: Colors.transparent,
-                    inputDecorationTheme: InputDecorationTheme(
-                      labelStyle: TextStyle(
-                        fontFamily: 'roboto',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsApp.instance.CinzaEscuro,
-                      ),
-                      floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-                        (Set<MaterialState> states) {
-                          final Color color =
-                              states.contains(MaterialState.focused)
-                                  ? ColorsApp.instance.Laranja
-                                  : ColorsApp.instance.CinzaMedio2;
-                          return TextStyle(color: color);
-                        },
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: ColorsApp.instance.Laranja,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 0.8,
-                          color: ColorsApp.instance.CinzaMedio,
-                        ),
-                      ),
-                    ),
-                  ),
-                  child: ListTileTheme(
-                    contentPadding: const EdgeInsets.all(4),
-                    horizontalTitleGap: 4.0,
-                    minLeadingWidth: 0,
-                    child: ExpansionTile(
-                      title: const Text('Endereço*'),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 6,
+              child: Container(
+                color: ColorsApp.instance.Branco,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
                       children: <Widget>[
                         const SizedBox(
-                          height: 10,
+                          height: 20,
+                        ),
+                        const SizedBox(
+                            height: 20,
+                            child: Text(
+                              'Dados pessoais',
+                              style: TextStyle(
+                                fontFamily: 'roboto',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: nomeController,
+                          decoration: getCustomInputDecoration('Nome*'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Campo obrigatório';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: cpfController,
+                          decoration: getCustomInputDecoration('CPF/CNPJ*'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Campo obrigatório';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: foneController,
+                          decoration: getCustomInputDecoration('Fone'),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: getCustomInputDecoration('E-mail'),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        const SizedBox(
+                            height: 20,
+                            child: Text(
+                              'Endereço',
+                              style: TextStyle(
+                                fontFamily: 'roboto',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 16,
                         ),
                         Row(
                           children: [
@@ -379,15 +272,14 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
                               flex: 5,
                               child: TextFormField(
                                 controller: cepController,
-                                decoration:
-                                    const InputDecoration(labelText: 'CEP'),
+                                decoration: getCustomInputDecoration('CEP*'),
                                 onChanged: (value) {
                                   if (value.length == 8) {
                                     _preencherEnderecoPorCEP(value);
                                   }
                                 },
                                 validator: (value) {
-                                  if (value!.length != 8 && value.isNotEmpty) {
+                                  if (value!.length != 8 && value.isEmpty) {
                                     return 'CEP inválido';
                                   }
                                   return null;
@@ -401,14 +293,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
                               flex: 3,
                               child: TextFormField(
                                 controller: ufController,
-                                decoration:
-                                    const InputDecoration(labelText: 'UF*'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Campo obrigatório';
-                                  }
-                                  return null;
-                                },
+                                decoration: getCustomInputDecoration('UF'),
                               ),
                             ),
                           ],
@@ -418,39 +303,31 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
                         ),
                         TextFormField(
                           controller: paisController,
-                          decoration: const InputDecoration(labelText: 'País'),
+                          decoration: getCustomInputDecoration('País'),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
                           controller: cidadeController,
-                          decoration:
-                              const InputDecoration(labelText: 'Cidade'),
+                          decoration: getCustomInputDecoration('Cidade'),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
                           controller: bairroController,
-                          decoration:
-                              const InputDecoration(labelText: 'Bairro'),
+                          decoration: getCustomInputDecoration('Bairro'),
                         ),
                         const SizedBox(
                           height: 16,
-                        ),
-                        TextFormField(
-                          controller: tipologradouroController,
-                          decoration: const InputDecoration(
-                              labelText: 'Tipo de Logradouro'),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
                           controller: logradouroController,
-                          decoration:
-                              const InputDecoration(labelText: 'Logradouro'),
+                          decoration: getCustomInputDecoration('Rua'),
                         ),
                         const SizedBox(
                           height: 16,
@@ -461,8 +338,7 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
                               flex: 3,
                               child: TextFormField(
                                 controller: numeroController,
-                                decoration:
-                                    const InputDecoration(labelText: 'Número'),
+                                decoration: getCustomInputDecoration('Número'),
                               ),
                             ),
                             const SizedBox(
@@ -472,26 +348,28 @@ class _CadastroClientePageState extends State<CadastroClientePage> {
                               flex: 5,
                               child: TextFormField(
                                 controller: complementoController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Complemento',
-                                ),
+                                decoration:
+                                    getCustomInputDecoration('Complemento'),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _cadastrarResponsavel,
+                          child: const Text('Cadastrar'),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _cadastrarCliente,
-                  child: const Text('Cadastrar'),
-                ),
-              ],
+              ),
             ),
-          ),
+            const Flexible(
+              flex: 4,
+              child: PessoaCadastroWidget(),
+            ),
+          ],
         ),
       ),
     );
