@@ -1,6 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 
 class PessoaCadastroWidget extends StatefulWidget {
@@ -10,8 +9,39 @@ class PessoaCadastroWidget extends StatefulWidget {
   _PessoaCadastroWidgetState createState() => _PessoaCadastroWidgetState();
 }
 
+class CardData {
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController idadeController = TextEditingController();
+  TextEditingController parentescoController = TextEditingController();
+}
+
+class CardNotifier extends ChangeNotifier {
+  final List<CardData> cardsData = [];
+
+  void addCard() {
+    cardsData.add(CardData());
+    notifyListeners();
+  }
+
+  void removeCard(int index) {
+    if (index >= 0 && index < cardsData.length) {
+      cardsData.removeAt(index);
+      notifyListeners();
+    }
+  }
+}
+
 class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
-  final List<Widget> cards = [];
+  late CardNotifier _cardNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _cardNotifier = CardNotifier();
+
+    // Adiciona um card vazio inicial que não pode ser excluído
+    _cardNotifier.addCard();
+  }
 
   InputDecoration getCustomInputDecoration(String labelText) {
     return InputDecoration(
@@ -44,7 +74,7 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
     );
   }
 
-  Widget buildCard() {
+  Widget buildCard(int index) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -67,18 +97,21 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
             height: 16,
           ),
           TextFormField(
+            controller: _cardNotifier.cardsData[index].nomeController,
             decoration: getCustomInputDecoration('Nome'),
           ),
           const SizedBox(
             height: 16,
           ),
           TextFormField(
+            controller: _cardNotifier.cardsData[index].idadeController,
             decoration: getCustomInputDecoration('Idade'),
           ),
           const SizedBox(
             height: 16,
           ),
           TextFormField(
+            controller: _cardNotifier.cardsData[index].parentescoController,
             decoration: getCustomInputDecoration('Grau de Parentesco'),
           ),
           const SizedBox(
@@ -101,18 +134,17 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    setState(() {
-                      cards.add(buildCard());
-                    });
+                    _cardNotifier.addCard();
                   },
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  _excluirCard(cards.length - 1);
-                },
-              ),
+              if (index > 0) // Adiciona um botão para remover apenas se não for o primeiro card
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    _cardNotifier.removeCard(index);
+                  },
+                ),
             ],
           ),
         ],
@@ -120,27 +152,30 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
     );
   }
 
-  void _excluirCard(int index) {
-    setState(() {
-      cards.removeAt(index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ...cards,
-                buildCard(),
-              ],
+    return ChangeNotifierProvider(
+      create: (context) => _cardNotifier,
+      child: Scaffold(
+        body: Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Consumer<CardNotifier>(
+                  builder: (context, cardNotifier, _) {
+                    return Column(
+                      children: List.generate(
+                        cardNotifier.cardsData.length,
+                        (index) => buildCard(index),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

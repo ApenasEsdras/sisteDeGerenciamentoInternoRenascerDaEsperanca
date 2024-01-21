@@ -191,23 +191,25 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
               flex: 6,
               child: Container(
                 color: ColorsApp.instance.Branco,
-                child: Padding(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Colors.white,
+                  ),
+                  margin: const EdgeInsets.all(16.0),
                   padding: const EdgeInsets.all(20.0),
                   child: Form(
                     key: _formKey,
                     child: ListView(
                       children: <Widget>[
                         const SizedBox(
-                          height: 20,
-                        ),
-                        const SizedBox(
                             height: 20,
                             child: Text(
-                              'Dados pessoais',
+                              'Cadastro de Pessoas',
                               style: TextStyle(
-                                fontFamily: 'roboto',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
                             )),
                         const SizedBox(
