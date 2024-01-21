@@ -1,25 +1,21 @@
+// ... (restante do código)
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 
-class PessoaCadastroWidget extends StatefulWidget {
-  const PessoaCadastroWidget({Key? key}) : super(key: key);
-
-  @override
-  _PessoaCadastroWidgetState createState() => _PessoaCadastroWidgetState();
-}
-
-class CardData {
+class FamiliaresCardData {
   TextEditingController nomeController = TextEditingController();
   TextEditingController idadeController = TextEditingController();
-  TextEditingController parentescoController = TextEditingController();
+  bool isEsposaOuEsposo = false;
+  bool isFilhoOuFilha = false;
 }
 
 class CardNotifier extends ChangeNotifier {
-  final List<CardData> cardsData = [];
+  final List<FamiliaresCardData> cardsData = [];
 
   void addCard() {
-    cardsData.add(CardData());
+    cardsData.add(FamiliaresCardData());
     notifyListeners();
   }
 
@@ -30,15 +26,22 @@ class CardNotifier extends ChangeNotifier {
     }
   }
 }
+class PessoaCadastroWidget extends StatefulWidget {
+  const PessoaCadastroWidget({Key? key}) : super(key: key);
+
+  @override
+  _PessoaCadastroWidgetState createState() => _PessoaCadastroWidgetState();
+}
+
 
 class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
   late CardNotifier _cardNotifier;
+  
 
   @override
   void initState() {
     super.initState();
     _cardNotifier = CardNotifier();
-
     // Adiciona um card vazio inicial que não pode ser excluído
     _cardNotifier.addCard();
   }
@@ -74,7 +77,7 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
     );
   }
 
-  Widget buildCard(int index) {
+  Widget buildCard(int index, FamiliaresCardData cardData) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -87,7 +90,7 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Cadastro de Pessoas',
+            'Familiares',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -97,31 +100,43 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
             height: 16,
           ),
           TextFormField(
-            controller: _cardNotifier.cardsData[index].nomeController,
+            controller: cardData.nomeController,
             decoration: getCustomInputDecoration('Nome'),
           ),
           const SizedBox(
             height: 16,
           ),
           TextFormField(
-            controller: _cardNotifier.cardsData[index].idadeController,
+            controller: cardData.idadeController,
             decoration: getCustomInputDecoration('Idade'),
           ),
           const SizedBox(
             height: 16,
           ),
-          TextFormField(
-            controller: _cardNotifier.cardsData[index].parentescoController,
-            decoration: getCustomInputDecoration('Grau de Parentesco'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Implemente a lógica para cadastrar a pessoa
-            },
-            child: const Text('Cadastrar Pessoa'),
+          Row(
+            children: [
+              const Text('Grau de Parentesco:'),
+              const SizedBox(width: 8),
+              Checkbox(
+                value: cardData.isEsposaOuEsposo,
+                onChanged: (value) {
+                  setState(() {
+                    cardData.isEsposaOuEsposo = value ?? false;
+                  });
+                },
+              ),
+              const Text('Esposa(o)'),
+              const SizedBox(width: 8),
+              Checkbox(
+                value: cardData.isFilhoOuFilha,
+                onChanged: (value) {
+                  setState(() {
+                    cardData.isFilhoOuFilha = value ?? false;
+                  });
+                },
+              ),
+              const Text('Filho(a)'),
+            ],
           ),
           const SizedBox(
             height: 16,
@@ -129,21 +144,30 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    _cardNotifier.addCard();
-                  },
+              TextButton(
+                onPressed: () {
+                  _cardNotifier.addCard();
+                },
+                child: const Row(
+                  children: [
+                    Icon(Icons.add),
+                    SizedBox(width: 8),
+                    Text('Adicionar'),
+                  ],
                 ),
               ),
-              if (index > 0) // Adiciona um botão para remover apenas se não for o primeiro card
-                IconButton(
-                  icon: const Icon(Icons.close),
+              if (index > 0)
+                TextButton(
                   onPressed: () {
                     _cardNotifier.removeCard(index);
                   },
+                  child: const Row(
+                    children: [
+                      Text('Remover'),
+                      SizedBox(width: 8),
+                      Icon(Icons.close),
+                    ],
+                  ),
                 ),
             ],
           ),
@@ -166,7 +190,7 @@ class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
                     return Column(
                       children: List.generate(
                         cardNotifier.cardsData.length,
-                        (index) => buildCard(index),
+                        (index) => buildCard(index, cardNotifier.cardsData[index]),
                       ),
                     );
                   },

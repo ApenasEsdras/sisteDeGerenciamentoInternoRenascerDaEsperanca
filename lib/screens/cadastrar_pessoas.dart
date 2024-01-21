@@ -53,11 +53,6 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
               ' ${ufController.text}, '
               'cep: ${cepController.text}',
         };
-
-        if (kDebugMode) {
-          print(cliente);
-        }
-
         try {
           await FirebaseFirestore.instance
               .collection('responsaveis')
@@ -91,7 +86,7 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
     // Realize a consulta no Firestore para verificar
     //se o cliente já está cadastrado
     final query = await FirebaseFirestore.instance
-        .collection('clientes')
+        .collection('resposaveis')
         .where('cpf', isEqualTo: cpf)
         .get();
 
@@ -117,8 +112,7 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
         final data = jsonDecode(response.body);
 
         setState(() {
-          paisController.text =
-              'Brasil'; // País fixo para o Brasil, pois a API retorna apenas dados nacionais
+          paisController.text = 'Brasil';
           ufController.text = data['uf'];
           cidadeController.text = data['localidade'];
           bairroController.text = data['bairro'];
@@ -206,7 +200,7 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
                         const SizedBox(
                             height: 20,
                             child: Text(
-                              'Cadastro de Pessoas',
+                              'Dados do Responsavel',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
