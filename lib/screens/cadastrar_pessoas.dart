@@ -10,7 +10,7 @@ import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 import 'package:sistemarenascerdaesperanca/screens/home_page.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
-import 'package:sistemarenascerdaesperanca/widgets/pessoa_cadastro_widget.dart';
+import 'package:sistemarenascerdaesperanca/widgets/cadastra_familiares_car.dart';
 
 class CadastroResponsavelPage extends StatefulWidget {
   const CadastroResponsavelPage({super.key});
@@ -50,8 +50,10 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
               ' ${cidadeController.text}, '
-              ' ${ufController.text}, '
-              'cep: ${cepController.text}',
+              ' ${ufController.text}, ',
+          'familiar': '${FamiliaresCardData.idadeInserida}, '
+              ' ${FamiliaresCardData.idadeInserida}, '
+              ' ${FamiliaresCardData.nomeInserido}, '
         };
         try {
           await FirebaseFirestore.instance
@@ -363,7 +365,7 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
             ),
             const Flexible(
               flex: 4,
-              child: PessoaCadastroWidget(),
+              child: CadastraFamiliaresCard(),
             ),
           ],
         ),

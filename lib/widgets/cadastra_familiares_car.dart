@@ -1,5 +1,7 @@
 // ... (restante do código)
 
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
@@ -9,6 +11,9 @@ class FamiliaresCardData {
   TextEditingController idadeController = TextEditingController();
   bool isEsposaOuEsposo = false;
   bool isFilhoOuFilha = false;
+  static String? nomeInserido;
+  static String? idadeInserida;
+  static String? gralDeParentescoInserido;
 }
 
 class CardNotifier extends ChangeNotifier {
@@ -26,15 +31,15 @@ class CardNotifier extends ChangeNotifier {
     }
   }
 }
-class PessoaCadastroWidget extends StatefulWidget {
-  const PessoaCadastroWidget({Key? key}) : super(key: key);
+class CadastraFamiliaresCard extends StatefulWidget {
+  const CadastraFamiliaresCard({Key? key}) : super(key: key);
 
   @override
-  _PessoaCadastroWidgetState createState() => _PessoaCadastroWidgetState();
+  _CadastraFamiliaresCardState createState() => _CadastraFamiliaresCardState();
 }
 
 
-class _PessoaCadastroWidgetState extends State<PessoaCadastroWidget> {
+class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
   late CardNotifier _cardNotifier;
   
 
