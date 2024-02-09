@@ -1,10 +1,8 @@
-// ... (restante do código)
-
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
 
 class FamiliaresCardData {
   TextEditingController nomeController = TextEditingController();
@@ -31,6 +29,7 @@ class CardNotifier extends ChangeNotifier {
     }
   }
 }
+
 class CadastraFamiliaresCard extends StatefulWidget {
   const CadastraFamiliaresCard({Key? key}) : super(key: key);
 
@@ -38,48 +37,13 @@ class CadastraFamiliaresCard extends StatefulWidget {
   _CadastraFamiliaresCardState createState() => _CadastraFamiliaresCardState();
 }
 
-
 class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
   late CardNotifier _cardNotifier;
-  
-
   @override
   void initState() {
     super.initState();
     _cardNotifier = CardNotifier();
-    // Adiciona um card vazio inicial que não pode ser excluído
     _cardNotifier.addCard();
-  }
-
-  InputDecoration getCustomInputDecoration(String labelText) {
-    return InputDecoration(
-      labelText: labelText,
-      labelStyle: TextStyle(
-        fontFamily: 'roboto',
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: ColorsApp.instance.CinzaEscuro,
-      ),
-      floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-        (Set<MaterialState> states) {
-          final Color color = states.contains(MaterialState.focused)
-              ? ColorsApp.instance.Laranja
-              : ColorsApp.instance.CinzaMedio2;
-          return TextStyle(color: color);
-        },
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: ColorsApp.instance.Laranja,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          width: 0.8,
-          color: ColorsApp.instance.CinzaMedio,
-        ),
-      ),
-    );
   }
 
   Widget buildCard(int index, FamiliaresCardData cardData) {
@@ -106,14 +70,14 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
           ),
           TextFormField(
             controller: cardData.nomeController,
-            decoration: getCustomInputDecoration('Nome'),
+            decoration: InputDecorationUtils.getCustomInputDecoration('Nome'),
           ),
           const SizedBox(
             height: 16,
           ),
           TextFormField(
             controller: cardData.idadeController,
-            decoration: getCustomInputDecoration('Idade'),
+            decoration: InputDecorationUtils.getCustomInputDecoration('Idade'),
           ),
           const SizedBox(
             height: 16,
@@ -195,7 +159,8 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
                     return Column(
                       children: List.generate(
                         cardNotifier.cardsData.length,
-                        (index) => buildCard(index, cardNotifier.cardsData[index]),
+                        (index) =>
+                            buildCard(index, cardNotifier.cardsData[index]),
                       ),
                     );
                   },

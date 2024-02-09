@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/build_left_bar.dart';
-import 'lista_pessoas.dart.dart';
+import '../../../widgets/build_left_bar.dart';
+import 'components/lista_esponsavel.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});

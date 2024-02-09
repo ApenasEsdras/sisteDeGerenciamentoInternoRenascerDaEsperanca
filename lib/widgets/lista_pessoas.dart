@@ -1,6 +1,6 @@
 // cliente_list_item.dart
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/models/cliente_models.dart';
+import 'package:sistemarenascerdaesperanca/app/models/dados_responsavel_models.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 
 class ResponsavelListItem extends StatelessWidget {

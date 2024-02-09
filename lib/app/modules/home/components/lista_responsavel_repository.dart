@@ -1,7 +1,7 @@
 // cliente_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sistemarenascerdaesperanca/models/cliente_models.dart';
+import 'package:sistemarenascerdaesperanca/app/models/dados_responsavel_models.dart';
 
 class ResponsavelRepository {
   Future<List<Responsavel>> fetchResponsavels() async {
