@@ -6,12 +6,10 @@ import 'familiares_card.dart';
 
 class CadastroResponsavelForm extends StatefulWidget {
   final CadastroResponsavelController controller;
-  final void Function()? onCadastroSuccess; // Callback
 
   const CadastroResponsavelForm({
     Key? key,
     required this.controller,
-    this.onCadastroSuccess,
   }) : super(key: key);
 
   @override
@@ -20,8 +18,6 @@ class CadastroResponsavelForm extends StatefulWidget {
 }
 
 class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -46,7 +42,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
           ),
           TextFormField(
             controller: widget.controller.cpfController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('CPF/CNPJ*'),
+            decoration:
+                InputDecorationUtils.getCustomInputDecoration('CPF/CNPJ*'),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Campo obrigatório';
@@ -90,7 +87,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                 flex: 5,
                 child: TextFormField(
                   controller: widget.controller.cepController,
-                  decoration: InputDecorationUtils.getCustomInputDecoration('CEP*'),
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('CEP*'),
                   onChanged: (value) {
                     if (value.length == 8) {
                       widget.controller.preencherEnderecoPorCEP(value);
@@ -108,10 +106,11 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                 width: 16,
               ),
               Flexible(
-                flex: 3,
+                flex: 5,
                 child: TextFormField(
                   controller: widget.controller.ufController,
-                  decoration: InputDecorationUtils.getCustomInputDecoration('UF'),
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('UF'),
                 ),
               ),
             ],
@@ -119,34 +118,56 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
           const SizedBox(
             height: 16,
           ),
-          TextFormField(
-            controller: widget.controller.paisController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('País'),
+          Row(
+            children: [
+              Flexible(
+                flex: 5,
+                child: TextFormField(
+                  controller: widget.controller.paisController,
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('PAIS'),
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Flexible(
+                flex: 5,
+                child: TextFormField(
+                  controller: widget.controller.cidadeController,
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('Cidade'),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 16,
           ),
-          TextFormField(
-            controller: widget.controller.cidadeController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Cidade'),
+          Row(
+            children: [
+              Flexible(
+                flex: 5,
+                child: TextFormField(
+                  controller: widget.controller.bairroController,
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('Bairro'),
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Flexible(
+                flex: 5,
+                child: TextFormField(
+                  controller: widget.controller.logradouroController,
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('Rua'),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: widget.controller.bairroController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Bairro'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: widget.controller.logradouroController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Rua'),
-          ),
+
           const SizedBox(
             height: 16,
           ),
@@ -156,7 +177,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                 flex: 3,
                 child: TextFormField(
                   controller: widget.controller.numeroController,
-                  decoration: InputDecorationUtils.getCustomInputDecoration('Número'),
+                  decoration:
+                      InputDecorationUtils.getCustomInputDecoration('Número'),
                 ),
               ),
               const SizedBox(
@@ -166,7 +188,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                 flex: 5,
                 child: TextFormField(
                   controller: widget.controller.complementoController,
-                  decoration: InputDecorationUtils.getCustomInputDecoration('Complemento'),
+                  decoration: InputDecorationUtils.getCustomInputDecoration(
+                      'Complemento'),
                 ),
               ),
             ],

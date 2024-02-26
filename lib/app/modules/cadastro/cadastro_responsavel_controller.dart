@@ -5,18 +5,15 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sistemarenascerdaesperanca/app/modules/cadastro/components/familiares_card.dart';
 import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 
 class CadastroResponsavelController {
   final formKey = GlobalKey<FormState>();
   final BuildContext context;
-  final void Function()? onCadastroSuccess; // Callback
 
-  CadastroResponsavelController(
-    this.context, {
-    this.onCadastroSuccess,
-  });
+  CadastroResponsavelController(this.context);
 
   final nomeController = TextEditingController();
   final cpfController = TextEditingController();
@@ -31,6 +28,7 @@ class CadastroResponsavelController {
   final foneController = TextEditingController();
   final emailController = TextEditingController();
   // Adicione outros controllers conforme necessário
+  List<FamiliaresCardData> familiaresDataList = [];
 
   Future<void> cadastrarResponsavel() async {
     if (formKey.currentState!.validate()) {
@@ -44,6 +42,7 @@ class CadastroResponsavelController {
           'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
+          'familiares': FamiliaresCardData.dadosDosFamiliares,
           'endereco': '${logradouroController.text}, '
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
@@ -66,10 +65,23 @@ class CadastroResponsavelController {
           );
         } catch (e) {
           CustomAlertDialog.cadastroResponsavelErro(context, '$e');
+          print(e);
         }
       }
     }
   }
+
+  // List<Map<String, dynamic>> _prepararDadosFamiliares() {
+  //   return familiaresDataList
+  //       .map((familiarData) => {
+  //             'nome': familiarData.nomeController.text,
+  //             'idade': familiarData.idadeController.text,
+  //             'grauDeParentesco': familiarData.isEsposaOuEsposo
+  //                 ? 'Esposa(o)'
+  //                 : (familiarData.isFilhoOuFilha ? 'Filho(a)' : ''),
+  //           })
+  //       .toList();
+  // }
 
   Future<bool> _verificarCadastroResponsavel() async {
     final cpf = cpfController.text;

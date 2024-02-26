@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,21 +9,32 @@ class FamiliaresCardData {
   TextEditingController idadeController = TextEditingController();
   bool isEsposaOuEsposo = false;
   bool isFilhoOuFilha = false;
-  static String? nomeInserido;
-  static String? idadeInserida;
-  static String? gralDeParentescoInserido;
+  static List<Map<String, dynamic>> dadosDosFamiliares = [] ;
+
+  
 }
 
-class CardNotifier extends ChangeNotifier {
+class CardNotifierCard extends ChangeNotifier {
   final List<FamiliaresCardData> cardsData = [];
 
   void addCard() {
-    cardsData.add(FamiliaresCardData());
+    FamiliaresCardData novoFamiliar = FamiliaresCardData();
+    FamiliaresCardData.dadosDosFamiliares.add({
+      'nome': novoFamiliar.nomeController.text,
+      'idade': novoFamiliar.idadeController.text,
+      'isEsposaOuEsposo': novoFamiliar.isEsposaOuEsposo,
+      'isFilhoOuFilha': novoFamiliar.isFilhoOuFilha,
+    });
+    cardsData.add(novoFamiliar);
+    print(cardsData);
+    print('___________');
+    print( FamiliaresCardData.dadosDosFamiliares);
     notifyListeners();
   }
 
   void removeCard(int index) {
     if (index >= 0 && index < cardsData.length) {
+      FamiliaresCardData.dadosDosFamiliares.removeAt(index);
       cardsData.removeAt(index);
       notifyListeners();
     }
@@ -38,12 +49,13 @@ class CadastraFamiliaresCard extends StatefulWidget {
 }
 
 class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
-  late CardNotifier _cardNotifier;
+  late CardNotifierCard _CardNotifierCard;
+
   @override
   void initState() {
     super.initState();
-    _cardNotifier = CardNotifier();
-    _cardNotifier.addCard();
+    _CardNotifierCard = CardNotifierCard();
+    _CardNotifierCard.addCard();
   }
 
   Widget buildCard(int index, FamiliaresCardData cardData) {
@@ -115,7 +127,7 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
             children: [
               TextButton(
                 onPressed: () {
-                  _cardNotifier.addCard();
+                  _CardNotifierCard.addCard();
                 },
                 child: const Row(
                   children: [
@@ -128,7 +140,7 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
               if (index > 0)
                 TextButton(
                   onPressed: () {
-                    _cardNotifier.removeCard(index);
+                    _CardNotifierCard.removeCard(index);
                   },
                   child: const Row(
                     children: [
@@ -148,26 +160,24 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => _cardNotifier,
+      create: (context) => _CardNotifierCard,
       child: Scaffold(
-        body: Row(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Consumer<CardNotifier>(
-                  builder: (context, cardNotifier, _) {
-                    return Column(
-                      children: List.generate(
-                        cardNotifier.cardsData.length,
-                        (index) =>
-                            buildCard(index, cardNotifier.cardsData[index]),
-                      ),
-                    );
-                  },
-                ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Consumer<CardNotifierCard>(
+                builder: (context, CardNotifierCard CardNotifierCard, _) {
+                  return Column(
+                    children: List.generate(
+                      CardNotifierCard.cardsData.length,
+                      (index) =>
+                          buildCard(index, CardNotifierCard.cardsData[index]),
+                    ),
+                  );
+                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
