@@ -3,10 +3,10 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastro_responsavel_page.dart';
+import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_page.dart';
 import 'package:sistemarenascerdaesperanca/app/models/dados_responsavel_models.dart';
 import 'package:sistemarenascerdaesperanca/app/modules/home/components/lista_responsavel_repository.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/detalhes_do_responsave/detalhes_das_pessoas_cadastradas.dart';
+import 'package:sistemarenascerdaesperanca/app/modules/detalhes_do_responsavel/detalhes_das_pessoas_cadastradas.dart';
 import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
 import 'package:sistemarenascerdaesperanca/widgets/lista_pessoas.dart';

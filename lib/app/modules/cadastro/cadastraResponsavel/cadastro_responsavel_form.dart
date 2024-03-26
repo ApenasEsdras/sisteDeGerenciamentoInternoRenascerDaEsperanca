@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastro_responsavel_controller.dart';
+import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
 
 import '../../../../styles/widget/iput_decoration.dart';
-import 'familiares_card.dart';
+import '../cadastraFamiliar/familiares_card.dart';
 
 class CadastroResponsavelForm extends StatefulWidget {
   final CadastroResponsavelController controller;
@@ -197,6 +197,23 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
           const SizedBox(
             height: 16,
           ),
+          SizedBox(
+            height: 400, // Defina a altura desejada
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: const Color.fromARGB(255, 177, 173, 208)),
+              child: const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: CadastraFamiliaresCard(),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           ElevatedButton(
             onPressed: () {
               widget.controller.cadastrarResponsavel();
@@ -204,7 +221,6 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
             child: const Text('Cadastrar'),
           ),
           // Widget de cadastro de familiares
-          const CadastraFamiliaresCard(),
         ],
       ),
     );

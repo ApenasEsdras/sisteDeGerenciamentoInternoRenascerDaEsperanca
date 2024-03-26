@@ -1,51 +1,30 @@
 // ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, avoid_print
 
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
 
-class FamiliaresCardData {
-  TextEditingController nomeController = TextEditingController();
-  TextEditingController idadeController = TextEditingController();
-  bool isEsposaOuEsposo = false;
-  bool isFilhoOuFilha = false;
-  static List<Map<String, dynamic>> dadosDosFamiliares = [] ;
-
-  
-}
-
-class CardNotifierCard extends ChangeNotifier {
-  final List<FamiliaresCardData> cardsData = [];
-
-  void addCard() {
-    FamiliaresCardData novoFamiliar = FamiliaresCardData();
-    FamiliaresCardData.dadosDosFamiliares.add({
-      'nome': novoFamiliar.nomeController.text,
-      'idade': novoFamiliar.idadeController.text,
-      'isEsposaOuEsposo': novoFamiliar.isEsposaOuEsposo,
-      'isFilhoOuFilha': novoFamiliar.isFilhoOuFilha,
-    });
-    cardsData.add(novoFamiliar);
-    print(cardsData);
-    print('___________');
-    print( FamiliaresCardData.dadosDosFamiliares);
-    notifyListeners();
-  }
-
-  void removeCard(int index) {
-    if (index >= 0 && index < cardsData.length) {
-      FamiliaresCardData.dadosDosFamiliares.removeAt(index);
-      cardsData.removeAt(index);
-      notifyListeners();
-    }
-  }
-}
+import 'cadastra_familiares_controller.dart';
 
 class CadastraFamiliaresCard extends StatefulWidget {
   const CadastraFamiliaresCard({Key? key}) : super(key: key);
 
   @override
   _CadastraFamiliaresCardState createState() => _CadastraFamiliaresCardState();
+}
+
+Future<void> selectImage(FamiliaresCardData cardData) async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    allowMultiple: false,
+  );
+
+  if (result != null) {
+    cardData.imageFile = File(result.files.single.path!);
+  }
 }
 
 class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
@@ -58,7 +37,7 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
     _CardNotifierCard.addCard();
   }
 
-  Widget buildCard(int index, FamiliaresCardData cardData) {
+  Widget buildCard(int index, FamiliaresCardData cardData,) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -70,13 +49,6 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Familiares',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
           const SizedBox(
             height: 16,
           ),
@@ -90,6 +62,19 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
           TextFormField(
             controller: cardData.idadeController,
             decoration: InputDecorationUtils.getCustomInputDecoration('Idade'),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  selectImage(cardData);
+                },
+                child: const Text('Selecionar Imagem'),
+              ),
+            ],
           ),
           const SizedBox(
             height: 16,
@@ -162,9 +147,21 @@ class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
     return ChangeNotifierProvider(
       create: (context) => _CardNotifierCard,
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(
+            255, 177, 173, 208), // Cor desejada para o fundo
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text(
+                  'Cadastrar familiares',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               Consumer<CardNotifierCard>(
                 builder: (context, CardNotifierCard CardNotifierCard, _) {
                   return Column(
