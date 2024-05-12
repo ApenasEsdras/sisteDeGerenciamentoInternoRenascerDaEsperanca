@@ -29,15 +29,15 @@ class CadastroResponsavelController {
   final foneController = TextEditingController();
   final emailController = TextEditingController();
   // Adicione outros controllers conforme necessário
-  
- Future<void> cadastrarResponsavel() async {
+
+  Future<void> cadastrarResponsavel() async {
     if (formKey.currentState!.validate()) {
       final bool responsavelNaoCadastrado =
           await _verificarCadastroResponsavel();
       if (responsavelNaoCadastrado) {
         // Atualiza familiarData com o último familiar adicionado
-       final familiarData = Familiares.familiaresList.isNotEmpty
-            ? Familiares.familiaresList.last.toMap()
+        final familiarData = Familiares.familiaresList.isNotEmpty
+            ? Familiares.familiaresList
             : {};
 
         final dadosDaFamilia = {

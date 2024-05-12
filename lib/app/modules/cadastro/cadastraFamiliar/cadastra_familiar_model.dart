@@ -13,7 +13,7 @@ class Familiares {
     this.isFilho = false,
   });
 
-  static List<Familiares> familiaresList = [];
+  static Map<String, dynamic> familiaresList = {};
 
   Map<String, dynamic> toMap() {
     return {
