@@ -13,5 +13,15 @@ class Familiares {
     this.isFilho = false,
   });
 
- List<Familiares> familiaresList = [];
+  static List<Familiares> familiaresList = [];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nome': nome,
+      'idade': idade,
+      'sexo': sexo,
+      'isConjuge': isConjuge,
+      'isFilho': isFilho,
+    };
+  }
 }

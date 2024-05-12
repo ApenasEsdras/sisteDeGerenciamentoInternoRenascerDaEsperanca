@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 
-
+import '../cadastraFamiliar/cadastra_familiar_model.dart';
 
 class CadastroResponsavelController {
   final formKey = GlobalKey<FormState>();
@@ -29,21 +29,25 @@ class CadastroResponsavelController {
   final foneController = TextEditingController();
   final emailController = TextEditingController();
   // Adicione outros controllers conforme necessário
-
-
-  Future<void> cadastrarResponsavel() async {
+  
+ Future<void> cadastrarResponsavel() async {
     if (formKey.currentState!.validate()) {
       final bool responsavelNaoCadastrado =
           await _verificarCadastroResponsavel();
       if (responsavelNaoCadastrado) {
+        // Atualiza familiarData com o último familiar adicionado
+       final familiarData = Familiares.familiaresList.isNotEmpty
+            ? Familiares.familiaresList.last.toMap()
+            : {};
+
         final dadosDaFamilia = {
           'nome': nomeController.text,
           'cpf': cpfController.text,
-          'pais': paisController.text,
-          'complemento': complementoController.text,
+          // 'pais': paisController.text,
+          // 'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
-          // 'familiares': FamiliaresCardData.dadosDosFamiliares,
+          'familiares': familiarData,
           'endereco': '${logradouroController.text}, '
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
@@ -71,7 +75,6 @@ class CadastroResponsavelController {
       }
     }
   }
-
 
   Future<bool> _verificarCadastroResponsavel() async {
     final cpf = cpfController.text;

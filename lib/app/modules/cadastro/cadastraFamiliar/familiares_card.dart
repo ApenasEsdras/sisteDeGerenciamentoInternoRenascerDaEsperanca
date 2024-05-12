@@ -22,7 +22,6 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
   bool _isConjuge = false;
   bool _isFilho = false;
 
-  List<Familiares> familiaresList = []; // Lista de familiares
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +114,7 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
           onPressed: () {
             // Adiciona um novo familiar à lista
             setState(() {
-              familiaresList.add(Familiares(
+              Familiares.familiaresList.add(Familiares(
                 nome: _nomeController.text,
                 idade: int.parse(_idadeController.text),
                 sexo: _selectedGender,
@@ -127,7 +126,7 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
           child: const Text('Adicionar Familiar'),
         ),
         // Exibe os familiares adicionados
-        ...familiaresList.map((familiar) {
+        ...Familiares.familiaresList.map((familiar) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
