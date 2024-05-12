@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
+import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/styles/text_styles.dart';
 
 import '../../../../styles/widget/iput_decoration.dart';
 import '../cadastraFamiliar/familiares_card.dart';
@@ -20,26 +22,26 @@ class CadastroResponsavelForm extends StatefulWidget {
 class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget.controller.formKey,
-      child: ListView(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            controller: widget.controller.nomeController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Nome*'),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 16,
-          ),
+    return ListView(
+      padding: const EdgeInsets.all(20.0),
+      children: [
+        Form(
+          key: widget.controller.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: widget.controller.nomeController,
+                decoration: InputDecorationUtils.getCustomInputDecoration('Nome*'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Campo obrigatório';
+                  }
+                  return null;
+                },
+              ),
+          const SizedBox(height: 16),
           TextFormField(
             controller: widget.controller.cpfController,
             decoration:
@@ -167,7 +169,6 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
               ),
             ],
           ),
-
           const SizedBox(
             height: 16,
           ),
@@ -194,35 +195,47 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          SizedBox(
-            height: 400, // Defina a altura desejada
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: const Color.fromARGB(255, 177, 173, 208)),
-              child: const Padding(
-                padding: EdgeInsets.all(20.0),
-                child: CadastraFamiliaresCard(),
+          const SizedBox(height: 20),
+              const Text(
+                'Cadastro de Familiar',
+                style: TextStyle(
+                  fontFamily: 'roboto',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              const CadastroPessoaPage(),
+
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        widget.controller.cadastrarResponsavel();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorsApp.instance.AzulClaro,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Cadastrar',
+                        style: context.textStyles.textMedium20.copyWith(
+                          fontSize: 20,
+                          color: ColorsApp.instance.Branco,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              widget.controller.cadastrarResponsavel();
-            },
-            child: const Text('Cadastrar'),
-          ),
-          // Widget de cadastro de familiares
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

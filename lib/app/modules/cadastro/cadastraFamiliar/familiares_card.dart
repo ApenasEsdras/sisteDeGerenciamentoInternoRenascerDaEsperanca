@@ -1,182 +1,148 @@
-// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, avoid_print
+// ignore_for_file: library_private_types_in_public_api
 
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
 
-import 'cadastra_familiares_controller.dart';
+import '../../../../styles/colors_app.dart';
+import 'cadastra_familiar_model.dart';
 
-class CadastraFamiliaresCard extends StatefulWidget {
-  const CadastraFamiliaresCard({Key? key}) : super(key: key);
-
-  @override
-  _CadastraFamiliaresCardState createState() => _CadastraFamiliaresCardState();
-}
-
-Future<void> selectImage(FamiliaresCardData cardData) async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-    type: FileType.image,
-    allowMultiple: false,
-  );
-
-  if (result != null) {
-    cardData.imageFile = File(result.files.single.path!);
-  }
-}
-
-class _CadastraFamiliaresCardState extends State<CadastraFamiliaresCard> {
-  late CardNotifierCard _CardNotifierCard;
+class CadastroPessoaPage extends StatefulWidget {
+  const CadastroPessoaPage({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    _CardNotifierCard = CardNotifierCard();
-    _CardNotifierCard.addCard();
-  }
+  _CadastroPessoaPageState createState() => _CadastroPessoaPageState();
+}
 
-  Widget buildCard(int index, FamiliaresCardData cardData,) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8.0),
-        color: Colors.white,
-      ),
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: cardData.nomeController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Nome'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: cardData.idadeController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Idade'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  selectImage(cardData);
-                },
-                child: const Text('Selecionar Imagem'),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              const Text('Grau de Parentesco:'),
-              const SizedBox(width: 8),
-              Checkbox(
-                value: cardData.isEsposaOuEsposo,
-                onChanged: (value) {
-                  setState(() {
-                    cardData.isEsposaOuEsposo = value ?? false;
-                  });
-                },
-              ),
-              const Text('Esposa(o)'),
-              const SizedBox(width: 8),
-              Checkbox(
-                value: cardData.isFilhoOuFilha,
-                onChanged: (value) {
-                  setState(() {
-                    cardData.isFilhoOuFilha = value ?? false;
-                  });
-                },
-              ),
-              const Text('Filho(a)'),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  _CardNotifierCard.addCard();
-                },
-                child: const Row(
-                  children: [
-                    Icon(Icons.add),
-                    SizedBox(width: 8),
-                    Text('Adicionar'),
-                  ],
-                ),
-              ),
-              if (index > 0)
-                TextButton(
-                  onPressed: () {
-                    _CardNotifierCard.removeCard(index);
-                  },
-                  child: const Row(
-                    children: [
-                      Text('Remover'),
-                      SizedBox(width: 8),
-                      Icon(Icons.close),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
+  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _idadeController = TextEditingController();
+  String _selectedGender = 'Masculino'; // Valor padrão
+  final List<String> _genders = ['Masculino', 'Feminino', 'Outro']; // Opções
+
+  bool _isConjuge = false;
+  bool _isFilho = false;
+
+  List<Familiares> familiaresList = []; // Lista de familiares
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _CardNotifierCard,
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(
-            255, 177, 173, 208), // Cor desejada para o fundo
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Text(
-                  'Cadastrar familiares',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: _nomeController,
+          decoration: InputDecorationUtils.getCustomInputDecoration('Nome'),
+        ),
+        const SizedBox(height: 20),
+        TextFormField(
+          controller: _idadeController,
+          decoration: InputDecorationUtils.getCustomInputDecoration('Idade'),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 20),
+        DropdownButtonFormField<String>(
+          value: _selectedGender,
+          items: _genders.map((String gender) {
+            return DropdownMenuItem<String>(
+              value: gender,
+              child: Text(gender),
+            );
+          }).toList(),
+          onChanged: (String? value) {
+            setState(() {
+              _selectedGender = value!;
+            });
+          },
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            labelText: 'Selecione o gênero',
+            labelStyle: TextStyle(
+              fontFamily: 'roboto',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: ColorsApp.instance.CinzaEscuro,
+            ),
+            floatingLabelStyle: MaterialStateTextStyle.resolveWith(
+              (Set<MaterialState> states) {
+                final Color color = states.contains(MaterialState.focused)
+                    ? ColorsApp.instance.Laranja
+                    : ColorsApp.instance.CinzaMedio2;
+                return TextStyle(color: color);
+              },
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: ColorsApp.instance.Laranja,
               ),
-              Consumer<CardNotifierCard>(
-                builder: (context, CardNotifierCard CardNotifierCard, _) {
-                  return Column(
-                    children: List.generate(
-                      CardNotifierCard.cardsData.length,
-                      (index) =>
-                          buildCard(index, CardNotifierCard.cardsData[index]),
-                    ),
-                  );
-                },
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 0.8,
+                color: ColorsApp.instance.CinzaMedio,
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Checkbox(
+              value: _isConjuge,
+              onChanged: (bool? value) {
+                setState(() {
+                  _isConjuge = value!;
+                });
+              },
+            ),
+            const Text('É cônjuge'),
+          ],
+        ),
+        Row(
+          children: [
+            Checkbox(
+              value: _isFilho,
+              onChanged: (bool? value) {
+                setState(() {
+                  _isFilho = value!;
+                });
+              },
+            ),
+            const Text('É filho/filha'),
+          ],
+        ),
+        ElevatedButton(
+          onPressed: () {
+            // Adiciona um novo familiar à lista
+            setState(() {
+              familiaresList.add(Familiares(
+                nome: _nomeController.text,
+                idade: int.parse(_idadeController.text),
+                sexo: _selectedGender,
+                isConjuge: _isConjuge,
+                isFilho: _isFilho,
+              ));
+            });
+          },
+          child: const Text('Adicionar Familiar'),
+        ),
+        // Exibe os familiares adicionados
+        ...familiaresList.map((familiar) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Nome: ${familiar.nome}'),
+              Text('Idade: ${familiar.idade}'),
+              Text('Sexo: ${familiar.sexo}'),
+              Text('É cônjuge: ${familiar.isConjuge}'),
+              Text('É filho/filha: ${familiar.isFilho}'),
+              const Divider(),
+            ],
+          );
+          
+        }),
+        
+      ],
     );
   }
 }

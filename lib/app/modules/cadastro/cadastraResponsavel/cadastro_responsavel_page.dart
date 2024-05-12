@@ -18,40 +18,28 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        showFilterIcon: false,
-        leftContent: Text(
-          'Cadastrar Responsável',
-          style: TextStyle(
-            color: ColorsApp.instance.CinzaMedio2,
-            fontSize: 24,
-            fontFamily: 'roboto',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.white,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: CadastroResponsavelForm(
-                  controller: CadastroResponsavelController(context),
-                ),
-              ),
+        appBar: CustomAppBar(
+          showFilterIcon: false,
+          leftContent: Text(
+            'Cadastrar Responsável',
+            style: TextStyle(
+              color: ColorsApp.instance.CinzaMedio2,
+              fontSize: 24,
+              fontFamily: 'roboto',
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CadastroResponsavelForm(
+                controller: CadastroResponsavelController(context),
+              ),
+            ),
+          ),
+        ));
   }
 }

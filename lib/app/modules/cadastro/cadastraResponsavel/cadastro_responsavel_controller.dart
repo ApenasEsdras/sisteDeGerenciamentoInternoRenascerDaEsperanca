@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, unused_element
+// ignore_for_file: use_build_context_synchronously, unused_element, avoid_print
 
 import 'dart:convert';
 
@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 
-import '../cadastraFamiliar/cadastra_familiares_controller.dart';
+
 
 class CadastroResponsavelController {
   final formKey = GlobalKey<FormState>();
@@ -29,7 +29,7 @@ class CadastroResponsavelController {
   final foneController = TextEditingController();
   final emailController = TextEditingController();
   // Adicione outros controllers conforme necessário
-  List<FamiliaresCardData> familiaresDataList = [];
+
 
   Future<void> cadastrarResponsavel() async {
     if (formKey.currentState!.validate()) {
@@ -43,7 +43,7 @@ class CadastroResponsavelController {
           'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
-          'familiares': FamiliaresCardData.dadosDosFamiliares,
+          // 'familiares': FamiliaresCardData.dadosDosFamiliares,
           'endereco': '${logradouroController.text}, '
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
@@ -72,17 +72,6 @@ class CadastroResponsavelController {
     }
   }
 
-  // List<Map<String, dynamic>> _prepararDadosFamiliares() {
-  //   return familiaresDataList
-  //       .map((familiarData) => {
-  //             'nome': familiarData.nomeController.text,
-  //             'idade': familiarData.idadeController.text,
-  //             'grauDeParentesco': familiarData.isEsposaOuEsposo
-  //                 ? 'Esposa(o)'
-  //                 : (familiarData.isFilhoOuFilha ? 'Filho(a)' : ''),
-  //           })
-  //       .toList();
-  // }
 
   Future<bool> _verificarCadastroResponsavel() async {
     final cpf = cpfController.text;

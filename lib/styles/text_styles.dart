@@ -27,3 +27,4 @@ class TextStyles {
 extension TextStylesExtensions on BuildContext {
   TextStyles get textStyles => TextStyles.instance;
 }
+
