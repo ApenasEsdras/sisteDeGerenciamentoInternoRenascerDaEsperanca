@@ -5,6 +5,7 @@ import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
 
 import '../../../../styles/colors_app.dart';
 import 'cadastra_familiar_model.dart';
+import 'cadastra_familiares_controller.dart';
 
 class CadastroPessoaPage extends StatefulWidget {
   const CadastroPessoaPage({Key? key}) : super(key: key);
@@ -111,34 +112,35 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
         onPressed: () {
           // Adiciona um novo familiar à lista
           setState(() {
-            Familiares novoFamiliar = Familiares(
-              nome: _nomeController.text,
-              idade: int.parse(_idadeController.text),
-              sexo: _selectedGender,
-              isConjuge: _isConjuge,
-              isFilho: _isFilho,
-            );
-            Familiares.familiaresList[_nomeController.text] =
-                novoFamiliar.toMap();
+            FamiliaresCardData.dadosDosFamiliares.add({
+              'nome': _nomeController.text,
+              'idade': _idadeController.text,
+              'isConjuge': _isConjuge,
+              'isFilho': _isFilho,
+            });
           });
         },
         child: const Text('Adicionar Familiar'),
       ),
 
       // Exibe os familiares adicionados
-      ...Familiares.familiaresList.values.map((familiar) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Nome: ${familiar['nome']}'),
-            Text('Idade: ${familiar['idade']}'),
-            Text('Sexo: ${familiar['sexo']}'),
-            Text('É cônjuge: ${familiar['isConjuge']}'),
-            Text('É filho/filha: ${familiar['isFilho']}'),
-            const Divider(),
-          ],
-        );
-      }),
+      ListView.builder(
+        shrinkWrap: true,
+        itemCount: FamiliaresCardData.dadosDosFamiliares.length,
+        itemBuilder: (context, index) {
+          final familiar = FamiliaresCardData.dadosDosFamiliares[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Nome: ${familiar['nome']}'),
+              Text('Idade: ${familiar['idade']}'),
+              Text('É cônjuge: ${familiar['isConjuge']}'),
+              Text('É filho/filha: ${familiar['isFilho']}'),
+              const Divider(),
+            ],
+          );
+        },
+      ),
     ]);
   }
 }

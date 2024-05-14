@@ -15,13 +15,5 @@ class Familiares {
 
   static Map<String, dynamic> familiaresList = {};
 
-  Map<String, dynamic> toMap() {
-    return {
-      'nome': nome,
-      'idade': idade,
-      'sexo': sexo,
-      'isConjuge': isConjuge,
-      'isFilho': isFilho,
-    };
-  }
+ 
 }

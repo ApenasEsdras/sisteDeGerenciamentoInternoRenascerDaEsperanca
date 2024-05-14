@@ -9,6 +9,7 @@ import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 
 import '../cadastraFamiliar/cadastra_familiar_model.dart';
+import '../cadastraFamiliar/cadastra_familiares_controller.dart';
 
 class CadastroResponsavelController {
   final formKey = GlobalKey<FormState>();
@@ -35,11 +36,7 @@ class CadastroResponsavelController {
       final bool responsavelNaoCadastrado =
           await _verificarCadastroResponsavel();
       if (responsavelNaoCadastrado) {
-        // Atualiza familiarData com o último familiar adicionado
-        final familiarData = Familiares.familiaresList.isNotEmpty
-            ? Familiares.familiaresList
-            : {};
-
+    
         final dadosDaFamilia = {
           'nome': nomeController.text,
           'cpf': cpfController.text,
@@ -47,7 +44,7 @@ class CadastroResponsavelController {
           // 'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
-          'familiares': familiarData,
+          'familiares':  FamiliaresCardData.dadosDosFamiliares,
           'endereco': '${logradouroController.text}, '
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
