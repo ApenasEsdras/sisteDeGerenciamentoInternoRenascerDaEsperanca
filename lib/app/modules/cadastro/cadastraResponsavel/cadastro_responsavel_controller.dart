@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, avoid_print
 
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +8,6 @@ import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
 
 import '../cadastraFamiliar/cadastra_familiar_model.dart';
-import '../cadastraFamiliar/cadastra_familiares_controller.dart';
 
 class CadastroResponsavelController {
   final formKey = GlobalKey<FormState>();
@@ -29,14 +27,12 @@ class CadastroResponsavelController {
   final complementoController = TextEditingController();
   final foneController = TextEditingController();
   final emailController = TextEditingController();
-  // Adicione outros controllers conforme necessário
 
   Future<void> cadastrarResponsavel() async {
     if (formKey.currentState!.validate()) {
       final bool responsavelNaoCadastrado =
           await _verificarCadastroResponsavel();
       if (responsavelNaoCadastrado) {
-    
         final dadosDaFamilia = {
           'nome': nomeController.text,
           'cpf': cpfController.text,
@@ -44,7 +40,7 @@ class CadastroResponsavelController {
           // 'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
-          'familiares':  FamiliaresCardData.dadosDosFamiliares,
+          'familiares': Familiares.dadosDosFamiliares,
           'endereco': '${logradouroController.text}, '
               ' ${numeroController.text}, '
               ' ${bairroController.text}, '
@@ -58,8 +54,7 @@ class CadastroResponsavelController {
               .set(dadosDaFamilia);
           debugPrint(jsonEncode(dadosDaFamilia));
           CustomAlertDialog.cadastroResponsavelSucesso(context);
-          // Chamar o callback de sucesso se estiver definido
-
+        
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => HomePage(),

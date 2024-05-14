@@ -12,8 +12,5 @@ class Familiares {
     this.isConjuge = false,
     this.isFilho = false,
   });
-
-  static Map<String, dynamic> familiaresList = {};
-
- 
+  static List<Map<String, dynamic>> dadosDosFamiliares = [];
 }

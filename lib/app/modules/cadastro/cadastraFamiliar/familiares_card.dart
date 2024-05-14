@@ -1,11 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
-
-import '../../../../styles/colors_app.dart';
 import 'cadastra_familiar_model.dart';
-import 'cadastra_familiares_controller.dart';
+import 'package:flutter/material.dart';
+import '../../../../styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
 
 class CadastroPessoaPage extends StatefulWidget {
   const CadastroPessoaPage({Key? key}) : super(key: key);
@@ -17,8 +15,8 @@ class CadastroPessoaPage extends StatefulWidget {
 class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _idadeController = TextEditingController();
-  String _selectedGender = 'Masculino'; // Valor padrão
-  final List<String> _genders = ['Masculino', 'Feminino', 'Outro']; // Opções
+  String _selectedGender = 'Masculino';
+  final List<String> _genders = ['Masculino', 'Feminino', 'Outro'];
 
   bool _isConjuge = false;
   bool _isFilho = false;
@@ -108,36 +106,53 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
           const Text('É filho/filha'),
         ],
       ),
+      const SizedBox(height: 18),
       ElevatedButton(
         onPressed: () {
           // Adiciona um novo familiar à lista
           setState(() {
-            FamiliaresCardData.dadosDosFamiliares.add({
+            Familiares.dadosDosFamiliares.add({
               'nome': _nomeController.text,
               'idade': _idadeController.text,
               'isConjuge': _isConjuge,
               'isFilho': _isFilho,
             });
+
+            _nomeController.text = '';
+            _idadeController.text = '';
           });
         },
         child: const Text('Adicionar Familiar'),
       ),
-
+      const SizedBox(height: 18),
       // Exibe os familiares adicionados
       ListView.builder(
         shrinkWrap: true,
-        itemCount: FamiliaresCardData.dadosDosFamiliares.length,
+        itemCount: Familiares.dadosDosFamiliares.length,
         itemBuilder: (context, index) {
-          final familiar = FamiliaresCardData.dadosDosFamiliares[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Nome: ${familiar['nome']}'),
-              Text('Idade: ${familiar['idade']}'),
-              Text('É cônjuge: ${familiar['isConjuge']}'),
-              Text('É filho/filha: ${familiar['isFilho']}'),
-              const Divider(),
-            ],
+          final familiar = Familiares.dadosDosFamiliares[index];
+          return Card(
+            elevation: 2,
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Nome: ${familiar['nome']}'),
+                  Text('Idade: ${familiar['idade']}'),
+                  Text('É cônjuge: ${familiar['isConjuge']}'),
+                  Text('É filho/filha: ${familiar['isFilho']}'),
+                ],
+              ),
+              trailing: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    Familiares.dadosDosFamiliares.removeAt(index);
+                  });
+                },
+                child: Icon(Icons.delete),
+              ),
+            ),
           );
         },
       ),
