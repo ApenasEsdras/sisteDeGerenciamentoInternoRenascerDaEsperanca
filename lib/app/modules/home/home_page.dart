@@ -9,20 +9,33 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            flex: 1, // 20% do espaço para a barra lateral
-            child: buildLeftBar.build(context),
-          ),
-           const Expanded(
-            flex: 4, // 80% do espaço para o conteúdo principal
-            child: ListarPessoas(),
-          ),
-        ],
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 600) {
+            return const Column(
+              children: [
+                // buildLeftBar.build(context),
+                Expanded(
+                  child: ListarPessoas(),
+                ),
+              ],
+            );
+          } else {
+            return Row(
+              children: [
+                Expanded(
+                  flex: 1, // 20% do espaço para a barra lateral
+                  child: buildLeftBar.build(context),
+                ),
+                const Expanded(
+                  flex: 4, // 80% do espaço para o conteúdo principal
+                  child: ListarPessoas(),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
-
- 
 }

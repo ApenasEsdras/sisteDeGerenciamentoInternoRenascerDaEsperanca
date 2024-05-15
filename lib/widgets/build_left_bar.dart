@@ -4,16 +4,16 @@ import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
 class BuildLeftBar {
   Widget build(BuildContext context) {
     return Container(
-      color: ColorsApp.instance.AzulClaro, // Cor da barra lateral
+      color: ColorsApp.instance.AzulClaro,
 
       child: Column(
         children: [
           const SizedBox(height: 100),
           SizedBox(
-            height: 100, // Altura da área da imagem
+            height: 100, 
             child: Image.asset(
-              'assets/images/logo.jpg', // Caminho para a imagem
-              fit: BoxFit.cover, // Modo de ajuste da imagem
+              'assets/images/logo.jpg',
+              fit: BoxFit.cover, 
             ),
           ),
           const SizedBox(
@@ -26,7 +26,7 @@ class BuildLeftBar {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.home, // Ícone de home do Material Icons
+                  Icons.home, 
                   color: ColorsApp.instance.Branco,
                   size: 30,
                 ),

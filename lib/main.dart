@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Firebase Demo',
+      title: 'Renascer Da Esperança',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
