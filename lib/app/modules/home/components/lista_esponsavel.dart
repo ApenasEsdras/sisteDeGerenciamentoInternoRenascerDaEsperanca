@@ -78,7 +78,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
       appBar: CustomAppBar(
         showFilterIcon: false,
         leftContent: Text(
-          'Cadastrar Responsavel',
+          'Familias',
           style: TextStyle(
             color: ColorsApp.instance.CinzaMedio2,
             fontSize: 24,
