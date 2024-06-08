@@ -17,6 +17,7 @@ class Responsavel {
   String? numero;
   String? complemento;
   String? tipologradouro;
+  List<Map<String, dynamic>>? dadosDosFamiliaresCadastradols;
 
   Responsavel({
     this.nome,
@@ -37,5 +38,20 @@ class Responsavel {
     this.tipologradouro,
     this.idade,
     this.endereco,
+    this.dadosDosFamiliaresCadastradols,
   });
+
+  factory Responsavel.fromJson(Map<String, dynamic> json) {
+    return Responsavel(
+      nome: json['nome'],
+      fone: json['fone'],
+      email: json['email'],
+      idade: json['idade'],
+      cpf: json['cpf'],
+      endereco: json['endereco'],
+      dadosDosFamiliaresCadastradols: (json['familiares'] as List<dynamic>?)
+          ?.map((item) => item as Map<String, dynamic>)
+          .toList(),
+    );
+  }
 }

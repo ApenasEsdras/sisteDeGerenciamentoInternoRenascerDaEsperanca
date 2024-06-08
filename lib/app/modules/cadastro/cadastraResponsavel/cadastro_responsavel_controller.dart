@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
 import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
-
 import '../cadastraFamiliar/cadastra_familiar_model.dart';
 
 class CadastroResponsavelController {
@@ -36,29 +35,34 @@ class CadastroResponsavelController {
         final dadosDaFamilia = {
           'nome': nomeController.text,
           'cpf': cpfController.text,
-          // 'pais': paisController.text,
-          // 'complemento': complementoController.text,
+          'pais': paisController.text,
+          'complemento': complementoController.text,
           'fone': foneController.text,
           'email': emailController.text,
+          'logradouro': logradouroController.text,
+          'numero': numeroController.text,
+          'bairro': bairroController.text,
+          'cidade': cidadeController.text,
+          'uf': ufController.text,
           'familiares': Familiares.dadosDosFamiliares,
           'endereco': '${logradouroController.text}, '
-              ' ${numeroController.text}, '
-              ' ${bairroController.text}, '
-              ' ${cidadeController.text}, '
-              ' ${ufController.text}, ',
+              '${numeroController.text}, '
+              '${bairroController.text}, '
+              '${cidadeController.text}, '
+              '${ufController.text}',
         };
         try {
           await FirebaseFirestore.instance
               .collection('responsaveis')
-              .doc(nomeController.text)
+              .doc()
               .set(dadosDaFamilia);
           debugPrint(jsonEncode(dadosDaFamilia));
           CustomAlertDialog.cadastroResponsavelSucesso(context);
-        
+
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => HomePage(),
-            ),
+            ),  
           );
         } catch (e) {
           CustomAlertDialog.cadastroResponsavelErro(context, '$e');

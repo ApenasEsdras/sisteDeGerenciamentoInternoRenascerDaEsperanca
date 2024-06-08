@@ -1,5 +1,4 @@
 // ignore_for_file: library_private_types_in_public_api
-
 import 'cadastra_familiar_model.dart';
 import 'package:flutter/material.dart';
 import '../../../../styles/colors_app.dart';
@@ -150,7 +149,7 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
                     Familiares.dadosDosFamiliares.removeAt(index);
                   });
                 },
-                child: Icon(Icons.delete),
+                child: const Icon(Icons.delete),
               ),
             ),
           );

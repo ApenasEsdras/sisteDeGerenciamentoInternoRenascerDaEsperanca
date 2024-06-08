@@ -1,4 +1,3 @@
-// cliente_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sistemarenascerdaesperanca/app/models/dados_responsavel_models.dart';
@@ -14,22 +13,7 @@ class ResponsavelRepository {
 
         for (final doc in querySnapshot.docs) {
           final data = doc.data() as Map<String, dynamic>;
-
-          final nome = data['nome'];
-          final fone = data['fone'];
-          final email = data['email'];
-          final idade = data['idade'];
-          final cpf = data['cpf'];
-          final endereco = data['endereco'];
-
-          final clienteData = Responsavel(
-            nome: nome,
-            fone: fone,
-            idade: idade,
-            email: email,
-            cpf: cpf,
-            endereco: endereco,
-          );
+          final clienteData = Responsavel.fromJson(data);
           clienteList.add(clienteData);
         }
 
