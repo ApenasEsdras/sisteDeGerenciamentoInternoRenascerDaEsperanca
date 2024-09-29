@@ -1,10 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_form.dart';
-import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
+import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
+import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_form.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/src/widgets/appbar_custom.dart';
 
 class CadastroResponsavelPage extends StatefulWidget {
   const CadastroResponsavelPage({Key? key}) : super(key: key);

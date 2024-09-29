@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../styles/colors_app.dart';
+import '../styles/colors_app.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool showFilterIcon;

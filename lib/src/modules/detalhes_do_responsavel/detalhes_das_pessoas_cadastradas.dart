@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/app/models/dados_responsavel_models.dart';
-import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/widgets/appbar_custom.dart';
+import 'package:sistemarenascerdaesperanca/src/models/dados_responsavel_models.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/src/widgets/appbar_custom.dart';
 
 class DetalhesResponsavelPage extends StatelessWidget {
   final Responsavel cliente;
@@ -113,18 +113,24 @@ class DetalhesResponsavelPage extends StatelessWidget {
                             const SizedBox(height: 10),
                             Expanded(
                               child: ListView(
-                                children: cliente.dadosDosFamiliaresCadastradols!.map((familiar) {
+                                children: cliente
+                                    .dadosDosFamiliaresCadastradols!
+                                    .map((familiar) {
                                   return Card(
-                                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text('Nome: ${familiar['nome']}'),
                                           Text('Idade: ${familiar['idade']}'),
-                                          if (familiar['isConjuge'] == true) Text('Cônjuge'),
-                                          if (familiar['isFilho'] == true) Text('Filho(a)'),
+                                          if (familiar['isConjuge'] == true)
+                                            const Text('Cônjuge'),
+                                          if (familiar['isFilho'] == true)
+                                            const Text('Filho(a)'),
                                         ],
                                       ),
                                     ),
@@ -213,7 +219,8 @@ class DetalhesResponsavelPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          ...cliente.dadosDosFamiliaresCadastradols!.map((familiar) {
+                          ...cliente.dadosDosFamiliaresCadastradols!
+                              .map((familiar) {
                             return Card(
                               margin: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Padding(
@@ -223,8 +230,10 @@ class DetalhesResponsavelPage extends StatelessWidget {
                                   children: <Widget>[
                                     Text('Nome: ${familiar['nome']}'),
                                     Text('Idade: ${familiar['idade']}'),
-                                    if (familiar['isConjuge'] == true) Text('Cônjuge'),
-                                    if (familiar['isFilho'] == true) Text('Filho(a)'),
+                                    if (familiar['isConjuge'] == true)
+                                      const Text('Cônjuge'),
+                                    if (familiar['isFilho'] == true)
+                                      const Text('Filho(a)'),
                                   ],
                                 ),
                               ),
@@ -245,7 +254,7 @@ class DetalhesResponsavelPage extends StatelessWidget {
   InputDecoration decorationReadOnly(String label) {
     return InputDecoration(
       labelText: label,
-      border: OutlineInputBorder(),
+      border: const OutlineInputBorder(),
       fillColor: Colors.grey.shade200,
       filled: true,
     );

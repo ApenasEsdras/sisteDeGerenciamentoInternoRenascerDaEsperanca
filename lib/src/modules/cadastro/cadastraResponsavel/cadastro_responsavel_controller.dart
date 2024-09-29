@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sistemarenascerdaesperanca/app/modules/home/home_page.dart';
-import 'package:sistemarenascerdaesperanca/helpers/alert_dialog.dart.dart';
+import 'package:sistemarenascerdaesperanca/src/modules/home/home_page.dart';
+import 'package:sistemarenascerdaesperanca/src/helpers/alert_dialog.dart.dart';
 import '../cadastraFamiliar/cadastra_familiar_model.dart';
 
 class CadastroResponsavelController {

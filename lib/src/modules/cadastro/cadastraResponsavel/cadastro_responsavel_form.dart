@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/app/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
-import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/styles/text_styles.dart';
+import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/text_styles.dart';
 
-import '../../../../styles/widget/iput_decoration.dart';
+import '../../../styles/widget/iput_decoration.dart';
 import '../cadastraFamiliar/familiares_card.dart';
 
 class CadastroResponsavelForm extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
 
 class InputDecorationUtils {
   static InputDecoration getCustomInputDecoration(String labelText) {

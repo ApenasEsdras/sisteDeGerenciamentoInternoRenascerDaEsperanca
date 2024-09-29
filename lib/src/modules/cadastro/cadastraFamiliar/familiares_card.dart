@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'cadastra_familiar_model.dart';
 import 'package:flutter/material.dart';
-import '../../../../styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/styles/widget/iput_decoration.dart';
+import '../../../styles/colors_app.dart';
+import 'package:sistemarenascerdaesperanca/src/styles/widget/iput_decoration.dart';
 
 class CadastroPessoaPage extends StatefulWidget {
   const CadastroPessoaPage({Key? key}) : super(key: key);
@@ -57,9 +57,9 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
             fontWeight: FontWeight.w500,
             color: ColorsApp.instance.CinzaEscuro,
           ),
-          floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-            (Set<MaterialState> states) {
-              final Color color = states.contains(MaterialState.focused)
+          floatingLabelStyle: WidgetStateTextStyle.resolveWith(
+            (Set<WidgetState> states) {
+              final Color color = states.contains(WidgetState.focused)
                   ? ColorsApp.instance.Laranja
                   : ColorsApp.instance.CinzaMedio2;
               return TextStyle(color: color);
