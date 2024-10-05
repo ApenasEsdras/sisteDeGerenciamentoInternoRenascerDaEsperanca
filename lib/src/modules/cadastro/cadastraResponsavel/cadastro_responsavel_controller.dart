@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, avoid_print
 
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistemarenascerdaesperanca/src/modules/home/home_page.dart';
@@ -27,7 +30,35 @@ class CadastroResponsavelController {
   final foneController = TextEditingController();
   final emailController = TextEditingController();
 
-  Future<void> cadastrarResponsavel() async {
+  Future<String?> uploadImage(File? image, Uint8List? webImage) async {
+    String filePath = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    try {
+      if (image != null) {
+        // Para Android/iOS
+        final ref = FirebaseStorage.instance.ref(filePath);
+        await ref.putFile(image);
+        String downloadUrl =
+            await ref.getDownloadURL(); // Retorna o URL da imagem
+        print('Imagem enviada: $downloadUrl');
+        return downloadUrl;
+      } else if (webImage != null) {
+        // Para Web
+        final ref = FirebaseStorage.instance.ref(filePath);
+        await ref.putData(webImage);
+        String downloadUrl =
+            await ref.getDownloadURL(); // Retorna o URL da imagem
+        print('Imagem enviada (Web): $downloadUrl');
+        return downloadUrl;
+      }
+    } catch (e) {
+      print('Erro ao fazer upload: $e');
+    }
+    return null; // Retorna null se não houver imagem ou erro
+  }
+
+  Future<void> cadastrarResponsavel(
+      BuildContext context, File? image, Uint8List? webImage) async {
+    String? imageUrl = await uploadImage(image, webImage);
     if (formKey.currentState!.validate()) {
       final bool responsavelNaoCadastrado =
           await _verificarCadastroResponsavel();
@@ -38,6 +69,7 @@ class CadastroResponsavelController {
           'pais': paisController.text,
           'complemento': complementoController.text,
           'fone': foneController.text,
+          'imageUrl': imageUrl,
           'email': emailController.text,
           'logradouro': logradouroController.text,
           'numero': numeroController.text,
@@ -62,7 +94,7 @@ class CadastroResponsavelController {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => HomePage(),
-            ),  
+            ),
           );
         } catch (e) {
           CustomAlertDialog.cadastroResponsavelErro(context, '$e');

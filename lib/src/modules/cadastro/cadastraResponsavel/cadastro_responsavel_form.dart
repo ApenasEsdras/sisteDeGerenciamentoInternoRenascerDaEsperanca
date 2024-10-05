@@ -31,25 +31,23 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
 
   Future<void> _pickImage() async {
     if (kIsWeb) {
-      // Se rodando na Web
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image, // Apenas arquivos de imagem
+        type: FileType.image,
       );
 
       if (result != null) {
         setState(() {
-          _webImage = result.files.first.bytes; // Armazena bytes da imagem
+          _webImage = result.files.first.bytes;
         });
       }
     } else {
-      // Se rodando no Android ou iOS
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile =
           await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         setState(() {
-          _image = File(pickedFile.path); // Armazena o caminho da imagem
+          _image = File(pickedFile.path);
         });
       }
     }
@@ -94,7 +92,9 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: _pickImage, // Seleciona imagem da galeria/web
+                  onPressed: () {
+                    _pickImage(); // Seleciona imagem da galeria/web
+                  },
                   child: const Text('Adicionar Imagem'),
                 ),
               ),
@@ -283,7 +283,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        widget.controller.cadastrarResponsavel();
+                        widget.controller
+                            .cadastrarResponsavel(context, _image, _webImage);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorsApp.instance.AzulClaro,
