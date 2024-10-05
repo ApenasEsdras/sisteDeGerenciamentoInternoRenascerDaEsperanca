@@ -11,9 +11,9 @@ class InputDecorationUtils {
         fontWeight: FontWeight.w500,
         color: ColorsApp.instance.CinzaEscuro,
       ),
-      floatingLabelStyle: MaterialStateTextStyle.resolveWith(
-        (Set<MaterialState> states) {
-          final Color color = states.contains(MaterialState.focused)
+      floatingLabelStyle: WidgetStateTextStyle.resolveWith(
+        (Set<WidgetState> states) {
+          final Color color = states.contains(WidgetState.focused)
               ? ColorsApp.instance.Laranja
               : ColorsApp.instance.CinzaMedio2;
           return TextStyle(color: color);

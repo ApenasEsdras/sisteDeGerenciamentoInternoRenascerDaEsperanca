@@ -40,15 +40,6 @@ class DetalhesResponsavelPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          // // Espaço para Imagem do Responsável
-                          // Container(
-                          //   height: 150,
-                          //   width: double.infinity,
-                          //   color: Colors.grey[300],
-                          //   child: const Center(
-                          //     child: Text('Imagem do Responsável'),
-                          //   ),
-                          // ),
                           const SizedBox(height: 20),
                           TextFormField(
                             readOnly: true,
@@ -91,15 +82,6 @@ class DetalhesResponsavelPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            // // Espaço para Imagem dos Familiares
-                            // Container(
-                            //   height: 150,
-                            //   width: double.infinity,
-                            //   color: Colors.grey[300],
-                            //   child: const Center(
-                            //     child: Text('Imagem dos Familiares'),
-                            //   ),
-                            // ),
                             const SizedBox(height: 20),
                             Text(
                               'Familiares:',

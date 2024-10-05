@@ -37,7 +37,7 @@ class ThemeConfig {
       labelStyle: TextStyles.instance.textRegular
           .copyWith(color: ColorsApp.instance.CinzaEscuro),
       errorStyle:
-          TextStyles.instance.textRegular.copyWith(color: Colors.redAccent),
+          TextStyles.instance.textRegular.copyWith(color: const Color.fromARGB(255, 19, 184, 234)),
     ),
   );
 }

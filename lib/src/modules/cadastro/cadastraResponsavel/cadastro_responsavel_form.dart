@@ -1,4 +1,10 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
 import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
 import 'package:sistemarenascerdaesperanca/src/styles/text_styles.dart';
@@ -20,6 +26,35 @@ class CadastroResponsavelForm extends StatefulWidget {
 }
 
 class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
+  File? _image; // Para armazenar a imagem no Android/iOS
+  Uint8List? _webImage; // Para armazenar a imagem na web
+
+  Future<void> _pickImage() async {
+    if (kIsWeb) {
+      // Se rodando na Web
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image, // Apenas arquivos de imagem
+      );
+
+      if (result != null) {
+        setState(() {
+          _webImage = result.files.first.bytes; // Armazena bytes da imagem
+        });
+      }
+    } else {
+      // Se rodando no Android ou iOS
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path); // Armazena o caminho da imagem
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -30,10 +65,44 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
+              Center(
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: _image != null && !kIsWeb
+                        ? DecorationImage(
+                            image: FileImage(
+                                _image!), // Exibe a imagem selecionada no Android/iOS
+                            fit: BoxFit.cover,
+                          )
+                        : _webImage != null
+                            ? DecorationImage(
+                                image: MemoryImage(
+                                    _webImage!), // Exibe a imagem selecionada na Web
+                                fit: BoxFit.cover,
+                              )
+                            : const DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/placeholder.png'), // Imagem de exemplo
+                                fit: BoxFit.cover,
+                              ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _pickImage, // Seleciona imagem da galeria/web
+                  child: const Text('Adicionar Imagem'),
+                ),
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: widget.controller.nomeController,
-                decoration: InputDecorationUtils.getCustomInputDecoration('Nome*'),
+                decoration:
+                    InputDecorationUtils.getCustomInputDecoration('Nome*'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Campo obrigatório';
@@ -41,161 +110,163 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                   return null;
                 },
               ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: widget.controller.cpfController,
-            decoration:
-                InputDecorationUtils.getCustomInputDecoration('CPF/CNPJ*'),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: widget.controller.foneController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('Fone'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          TextFormField(
-            controller: widget.controller.emailController,
-            decoration: InputDecorationUtils.getCustomInputDecoration('E-mail'),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const SizedBox(
-              height: 20,
-              child: Text(
-                'Endereço',
-                style: TextStyle(
-                  fontFamily: 'roboto',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              )),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.cepController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('CEP*'),
-                  onChanged: (value) {
-                    if (value.length == 8) {
-                      widget.controller.preencherEnderecoPorCEP(value);
-                    }
-                  },
-                  validator: (value) {
-                    if (value!.length != 8 && value.isEmpty) {
-                      return 'CEP inválido';
-                    }
-                    return null;
-                  },
-                ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: widget.controller.cpfController,
+                decoration:
+                    InputDecorationUtils.getCustomInputDecoration('CPF/CNPJ*'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Campo obrigatório';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(
-                width: 16,
+                height: 16,
               ),
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.ufController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('UF'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.paisController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('PAIS'),
-                ),
+              TextFormField(
+                controller: widget.controller.foneController,
+                decoration:
+                    InputDecorationUtils.getCustomInputDecoration('Fone'),
               ),
               const SizedBox(
-                width: 16,
+                height: 16,
               ),
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.cidadeController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('Cidade'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.bairroController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('Bairro'),
-                ),
+              TextFormField(
+                controller: widget.controller.emailController,
+                decoration:
+                    InputDecorationUtils.getCustomInputDecoration('E-mail'),
               ),
               const SizedBox(
-                width: 16,
-              ),
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.logradouroController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('Rua'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              Flexible(
-                flex: 3,
-                child: TextFormField(
-                  controller: widget.controller.numeroController,
-                  decoration:
-                      InputDecorationUtils.getCustomInputDecoration('Número'),
-                ),
+                height: 16,
               ),
               const SizedBox(
-                width: 16,
+                  height: 20,
+                  child: Text(
+                    'Endereço',
+                    style: TextStyle(
+                      fontFamily: 'roboto',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )),
+              const SizedBox(
+                height: 16,
               ),
-              Flexible(
-                flex: 5,
-                child: TextFormField(
-                  controller: widget.controller.complementoController,
-                  decoration: InputDecorationUtils.getCustomInputDecoration(
-                      'Complemento'),
-                ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.cepController,
+                      decoration:
+                          InputDecorationUtils.getCustomInputDecoration('CEP*'),
+                      onChanged: (value) {
+                        if (value.length == 8) {
+                          widget.controller.preencherEnderecoPorCEP(value);
+                        }
+                      },
+                      validator: (value) {
+                        if (value!.length != 8 && value.isEmpty) {
+                          return 'CEP inválido';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.ufController,
+                      decoration:
+                          InputDecorationUtils.getCustomInputDecoration('UF'),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.paisController,
+                      decoration:
+                          InputDecorationUtils.getCustomInputDecoration('PAIS'),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.cidadeController,
+                      decoration: InputDecorationUtils.getCustomInputDecoration(
+                          'Cidade'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.bairroController,
+                      decoration: InputDecorationUtils.getCustomInputDecoration(
+                          'Bairro'),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.logradouroController,
+                      decoration:
+                          InputDecorationUtils.getCustomInputDecoration('Rua'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 3,
+                    child: TextFormField(
+                      controller: widget.controller.numeroController,
+                      decoration: InputDecorationUtils.getCustomInputDecoration(
+                          'Número'),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: widget.controller.complementoController,
+                      decoration: InputDecorationUtils.getCustomInputDecoration(
+                          'Complemento'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
               const Text(
                 'Cadastro de Familiar',
                 style: TextStyle(
@@ -206,7 +277,6 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
               ),
               const SizedBox(height: 10),
               const CadastroPessoaPage(),
-
               const SizedBox(height: 20),
               Row(
                 children: [
