@@ -133,15 +133,20 @@ class DetalhesResponsavelPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // Espaço para Imagem do Responsável
-                        Container(
-                          height: 150,
-                          width: double.infinity,
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Text('Imagem do Responsável'),
-                          ),
-                        ),
+                        cliente.imageUrl != null
+                            // Espaço para Imagem do Responsável
+                            ? Image.network(
+                                cliente.imageUrl.toString(),
+                                height: 150,
+                                width: 150,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/placeholder.png', // Imagem de placeholder se não houver URL
+                                height: 150,
+                                width: 150,
+                                fit: BoxFit.cover,
+                              ),
                         const SizedBox(height: 20),
                         TextFormField(
                           readOnly: true,

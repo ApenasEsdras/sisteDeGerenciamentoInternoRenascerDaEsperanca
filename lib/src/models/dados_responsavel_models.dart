@@ -1,5 +1,6 @@
 class Responsavel {
   String? nome;
+  String? imageUrl;
   int? idade;
   String? endereco;
   String? fone;
@@ -21,6 +22,7 @@ class Responsavel {
 
   Responsavel({
     this.nome,
+    this.imageUrl,
     this.fone,
     this.email,
     this.codigo,
@@ -46,6 +48,7 @@ class Responsavel {
       nome: json['nome'],
       fone: json['fone'],
       email: json['email'],
+      imageUrl: json['imageUrl'],
       idade: json['idade'],
       cpf: json['cpf'],
       endereco: json['endereco'],
