@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/src/models/dados_responsavel_models.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/src/widgets/appbar_custom.dart';
+
+import '../../models/dados_responsavel_models.dart';
+import '../../styles/colors_app.dart';
+import '../../styles/widget/appbar.dart';
+
 
 class DetalhesResponsavelPage extends StatelessWidget {
   final Responsavel cliente;
@@ -21,7 +23,7 @@ class DetalhesResponsavelPage extends StatelessWidget {
             fontFamily: 'roboto',
             fontWeight: FontWeight.w500,
           ),
-        ),
+        ), onMenuPressed: () {  },
       ),
       body: Container(
         color: ColorsApp.instance.Branco,

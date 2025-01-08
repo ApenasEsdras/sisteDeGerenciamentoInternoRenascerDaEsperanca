@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sistemarenascerdaesperanca/src/modules/home/home_page.dart';
-import 'package:sistemarenascerdaesperanca/src/helpers/alert_dialog.dart.dart';
+import '../../../helpers/alert_dialog.dart.dart';
+import '../../home/home_page.dart';
 import '../cadastraFamiliar/cadastra_familiar_model.dart';
 
 class CadastroResponsavelController {

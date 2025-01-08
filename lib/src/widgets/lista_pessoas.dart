@@ -1,7 +1,8 @@
 // cliente_list_item.dart
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/src/models/dados_responsavel_models.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
+
+import '../models/dados_responsavel_models.dart';
+import '../styles/colors_app.dart';
 
 class ResponsavelListItem extends StatelessWidget {
   final Responsavel cliente;
@@ -10,11 +11,11 @@ class ResponsavelListItem extends StatelessWidget {
   final int maxCaracteres = 30;
 
   const ResponsavelListItem({
-    Key? key,
+    super.key,
     required this.cliente,
     required this.onTapCallback,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   String getNomeExibido(String? nome) {
     if (nome != null && nome.length > maxCaracteres) {

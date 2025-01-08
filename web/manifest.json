@@ -1,6 +1,6 @@
 {
-    "name": "sistemarenascerdaesperanca",
-    "short_name": "sistemarenascerdaesperanca",
+    "name": "renascer_sistema",
+    "short_name": "renascer_sistema",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

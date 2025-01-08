@@ -1,16 +1,12 @@
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/text_styles.dart';
+import 'package:renascer_sistema/src/styles/text_styles.dart';
 
+import '../../../styles/colors_app.dart';
 import '../../../styles/widget/iput_decoration.dart';
 import '../cadastraFamiliar/familiares_card.dart';
+import 'cadastro_responsavel_controller.dart';
 
 class CadastroResponsavelForm extends StatefulWidget {
   final CadastroResponsavelController controller;
@@ -26,32 +22,32 @@ class CadastroResponsavelForm extends StatefulWidget {
 }
 
 class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
-  File? _image; // Para armazenar a imagem no Android/iOS
-  Uint8List? _webImage; // Para armazenar a imagem na web
+  // File? _image; // Para armazenar a imagem no Android/iOS
+  // Uint8List? _webImage; // Para armazenar a imagem na web
 
-  Future<void> _pickImage() async {
-    if (kIsWeb) {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-      );
+  // Future<void> _pickImage() async {
+  //   if (kIsWeb) {
+  //     FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //       type: FileType.image,
+  //     );
 
-      if (result != null) {
-        setState(() {
-          _webImage = result.files.first.bytes;
-        });
-      }
-    } else {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
+  //     if (result != null) {
+  //       setState(() {
+  //         _webImage = result.files.first.bytes;
+  //       });
+  //     }
+  //   } else {
+  //     final ImagePicker picker = ImagePicker();
+  //     final XFile? pickedFile =
+  //         await picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      }
-    }
-  }
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _image = File(pickedFile.path);
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,41 +59,41 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: _image != null && !kIsWeb
-                        ? DecorationImage(
-                            image: FileImage(
-                                _image!), // Exibe a imagem selecionada no Android/iOS
-                            fit: BoxFit.cover,
-                          )
-                        : _webImage != null
-                            ? DecorationImage(
-                                image: MemoryImage(
-                                    _webImage!), // Exibe a imagem selecionada na Web
-                                fit: BoxFit.cover,
-                              )
-                            : const DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/placeholder.png'), // Imagem de exemplo
-                                fit: BoxFit.cover,
-                              ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _pickImage(); // Seleciona imagem da galeria/web
-                  },
-                  child: const Text('Adicionar Imagem'),
-                ),
-              ),
+              // Center(
+              //   child: Container(
+              //     width: 150,
+              //     height: 150,
+              //     decoration: BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       image: _image != null && !kIsWeb
+              //           ? DecorationImage(
+              //               image: FileImage(
+              //                   _image!), // Exibe a imagem selecionada no Android/iOS
+              //               fit: BoxFit.cover,
+              //             )
+              //           : _webImage != null
+              //               ? DecorationImage(
+              //                   image: MemoryImage(
+              //                       _webImage!), // Exibe a imagem selecionada na Web
+              //                   fit: BoxFit.cover,
+              //                 )
+              //               : const DecorationImage(
+              //                   image: AssetImage(
+              //                       'assets/images/placeholder.png'), // Imagem de exemplo
+              //                   fit: BoxFit.cover,
+              //                 ),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
+              // Center(
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       _pickImage(); // Seleciona imagem da galeria/web
+              //     },
+              //     child: const Text('Adicionar Imagem'),
+              //   ),
+              // ),
               const SizedBox(height: 20),
               TextFormField(
                 controller: widget.controller.nomeController,
@@ -283,8 +279,8 @@ class _CadastroResponsavelFormState extends State<CadastroResponsavelForm> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        widget.controller
-                            .cadastrarResponsavel(context, _image, _webImage);
+                        // widget.controller
+                        //     .cadastrarResponsavel(context, _image, _webImage);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorsApp.instance.AzulClaro,

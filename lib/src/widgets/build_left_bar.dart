@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
+
+import '../styles/colors_app.dart';
 
 class BuildLeftBar {
   Widget build(BuildContext context) {

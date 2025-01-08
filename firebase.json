@@ -1,6 +1,1 @@
-{
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  }
-}
+{"flutter":{"platforms":{"android":{"default":{"projectId":"sistemarenascerdaesperanca","appId":"1:779344555546:android:675890f306f77f658d2ba3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"sistemarenascerdaesperanca","configurations":{"android":"1:779344555546:android:675890f306f77f658d2ba3","web":"1:779344555546:web:925b9356ae3b0a4b8d2ba3"}}}}}}

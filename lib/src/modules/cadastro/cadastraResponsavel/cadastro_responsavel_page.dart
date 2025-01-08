@@ -1,10 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_controller.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_form.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/src/widgets/appbar_custom.dart';
+
+import '../../../styles/colors_app.dart';
+import '../../../styles/widget/appbar.dart';
+import 'cadastro_responsavel_controller.dart';
+import 'cadastro_responsavel_form.dart';
+
 
 class CadastroResponsavelPage extends StatefulWidget {
   const CadastroResponsavelPage({Key? key}) : super(key: key);
@@ -28,7 +30,7 @@ class _CadastroResponsavelPageState extends State<CadastroResponsavelPage> {
               fontFamily: 'roboto',
               fontWeight: FontWeight.w500,
             ),
-          ),
+          ), onMenuPressed: () {  },
         ),
         body: SingleChildScrollView(
           child: SizedBox(

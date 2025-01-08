@@ -3,13 +3,14 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/cadastro/cadastraResponsavel/cadastro_responsavel_page.dart';
-import 'package:sistemarenascerdaesperanca/src/models/dados_responsavel_models.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/home/components/lista_responsavel_repository.dart';
-import 'package:sistemarenascerdaesperanca/src/modules/detalhes_do_responsavel/detalhes_das_pessoas_cadastradas.dart';
-import 'package:sistemarenascerdaesperanca/src/styles/colors_app.dart';
-import 'package:sistemarenascerdaesperanca/src/widgets/appbar_custom.dart';
-import 'package:sistemarenascerdaesperanca/src/widgets/lista_pessoas.dart';
+
+import '../../../models/dados_responsavel_models.dart';
+import '../../../styles/colors_app.dart';
+import '../../../styles/widget/appbar.dart';
+import '../../../widgets/lista_pessoas.dart';
+import '../../cadastro/cadastraResponsavel/cadastro_responsavel_page.dart';
+import '../../detalhes_do_responsavel/detalhes_das_pessoas_cadastradas.dart';
+import 'lista_responsavel_repository.dart';
 
 class ListarPessoas extends StatefulWidget {
   const ListarPessoas({Key? key}) : super(key: key);
@@ -85,7 +86,7 @@ class _ListarPessoasState extends State<ListarPessoas> {
             fontFamily: 'roboto',
             fontWeight: FontWeight.w500,
           ),
-        ),
+        ), onMenuPressed: () {  },
       ),
       body: Container(
         color: ColorsApp.instance.Branco,
