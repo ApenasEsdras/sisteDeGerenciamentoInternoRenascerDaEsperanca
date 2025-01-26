@@ -1,4 +1,4 @@
-# renascer_sistema
+# app_renascer
 
 A new Flutter project.
 
